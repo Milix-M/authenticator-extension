@@ -17,9 +17,6 @@ export class StorageProvider {
     });
   }
 
-  /**
-   * シークレットをDBからgetします
-   */
   public async getSecret() {
     const bucket = getBucket("acc-bucket", "sync");
 
