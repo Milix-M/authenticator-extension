@@ -31,5 +31,4 @@ const setTheme = () => {
   }
 };
 
-genTwoFaCode();
 setTheme();
