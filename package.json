@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.23",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20.14.2",
     "autoprefixer": "^10.4.19",
     "daisyui": "^4.12.2",
@@ -21,6 +22,7 @@
     "vite-plugin-node-polyfills": "^0.22.0"
   },
   "dependencies": {
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "crypto-js": "^4.2.0"
   }
 }
