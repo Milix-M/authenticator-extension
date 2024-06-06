@@ -1,17 +1,34 @@
-import { chromeStorage } from "./chomeStorage.ts";
 import { Totp } from "./totp.ts";
 
-const genTwoFaCode = () => {
-  const totp = new Totp(6, 30);
-  const key = totp.decodeB32Code("thisisasecretkey");
+/**
+ * 二段階認証コードをシークレットに基づき計算します
+ * @param secret 共有されたシークレット
+ * @param type 二段階認証のタイプ
+ * @param counter HOTPのカウンタ
+ * @returns 6桁の計算結果
+ */
+const genTwoFaCode = (
+  secret: string,
+  type: "totp" | "hotp",
+  counter?: number
+): string => {
+  let code = "";
 
-  const code = totp.totp(key, new Date());
-
-  const twofacode = document.getElementById("twofacode");
-
-  if (twofacode) {
-    twofacode.innerHTML = code;
+  if (type === "totp") {
+    const totp = new Totp(6, 30);
+    const key = totp.decodeB32Code(secret);
+    code = totp.totp(key, new Date());
+  } else if (type === "hotp") {
+    const hotp = new Totp(6, 30);
+    const key = hotp.decodeB32Code(secret);
+    // counterが入ってなければデフォルトで0いれる
+    if (!counter) {
+      counter = 0;
+    }
+    code = hotp.hotp(key, counter);
   }
+
+  return code;
 };
 
 /**
@@ -34,6 +51,8 @@ const setTheme = () => {
 
 setTheme();
 
-const db = new chromeStorage();
+const p = document.getElementById("code");
+if (p !== null) {
+  p.textContent = genTwoFaCode("thisisasecretkey", "totp");
+}
 
-db.setSecret()
