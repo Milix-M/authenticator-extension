@@ -1,5 +1,7 @@
 import { Account } from "./models/account";
-import crypto from 'crypto-js';
+import crypto from "crypto-js";
+import CryptoJS from "crypto-js";
+import { getBucket } from "@extend-chrome/storage";
 
 /**
  * シークレット, カウンタなどの情報をinput, outputするクラス
@@ -7,12 +9,32 @@ import crypto from 'crypto-js';
 export class StorageProvider {
   public setSecret(account: Account) {
     const encryptedAccount = this.genSavingEncryptString(account);
+
+    const bucket = getBucket("acc-bucket", "sync");
+
+    bucket.set({
+      [account.dbId]: encryptedAccount,
+    });
   }
 
-  public getSecret() {}
+  /**
+   * シークレットをDBからgetします
+   */
+  public async getSecret() {
+    const bucket = getBucket("acc-bucket", "sync");
+
+    const secrets = await bucket.get();
+
+    for (let [_, v] of Object.entries(secrets)) {
+      this.decodeEncryptAccount(v);
+    }
+
+  }
 
   /**
    * Accountクラスの属性を元にパスワードにより暗号化された文字列を生成します
+   * TODO: JSONで扱う
+   *
    * @param account
    * @returns
    */
@@ -34,6 +56,15 @@ export class StorageProvider {
       buildString += ":" + account.issuer;
     }
 
+    // 暗号化して返却
+    return crypto.AES.encrypt(buildString, this.readPassword()).toString();
+  }
+
+  /**
+   * パスワードを読み込みます
+   * @returns パスワード
+   */
+  private readPassword(): string {
     // 暗号化するパスワード
     let password = "password";
 
@@ -41,7 +72,16 @@ export class StorageProvider {
       password = import.meta.env.VITE_ENCRYPT_PASSWORD;
     }
 
-    // 暗号化して返却
-    return crypto.AES.encrypt(buildString, password).toString();
+    return password;
+  }
+
+  /**
+   * 暗号化されたAccountクラスを復号化します
+   * @param encryptStr 暗号化されたAccount
+   */
+  private decodeEncryptAccount(encryptStr: string) {
+    const decodedAccount = crypto.AES.decrypt(encryptStr, this.readPassword()).toString(CryptoJS.enc.Utf8);
+
+    console.log(decodedAccount)
   }
 }
