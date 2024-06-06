@@ -1,3 +1,4 @@
+import { chromeStorage } from "./chomeStorage.ts";
 import { Totp } from "./totp.ts";
 
 const genTwoFaCode = () => {
@@ -32,3 +33,7 @@ const setTheme = () => {
 };
 
 setTheme();
+
+const db = new chromeStorage();
+
+db.setSecret()
