@@ -2,6 +2,7 @@ import './style.css'
 import typescriptLogo from './typescript.svg'
 import viteLogo from '/vite.svg'
 import { setupCounter } from './counter.ts'
+import { Totp } from './totp.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -18,7 +19,23 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <p class="read-the-docs">
       Click on the Vite and TypeScript logos to learn more
     </p>
+    <p id="twofacode"></p>
   </div>
 `
 
 setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+
+const genTwoFaCode = () => {
+  const totp = new Totp(6, 30);
+  const key = totp.decodeB32Code("thisisasecretkey");
+
+  const code = totp.totp(key, new Date);
+  
+  const twofacode = document.getElementById("twofacode");
+
+  if (twofacode) {
+    twofacode.innerHTML = code;
+  }
+}
+
+genTwoFaCode();
