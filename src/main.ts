@@ -1,3 +1,5 @@
+import { Account } from "./models/account.ts";
+import { StorageProvider } from "./storage.ts";
 import { Totp } from "./totp.ts";
 
 /**
@@ -55,4 +57,8 @@ const p = document.getElementById("code");
 if (p !== null) {
   p.textContent = genTwoFaCode("thisisasecretkey", "totp");
 }
+
+const stp = new StorageProvider();
+stp.setSecret(new Account(0, "thisisasecretkey", "totp", "テスト"));
+stp.getSecret();
 
