@@ -16,12 +16,6 @@ function App() {
   return (
     <>
       <div id="app" className="w-full flex justify-center">
-        <div>
-          <p>{accountName}</p>
-          <p>{secret}</p>
-          <p>{otpType}</p>
-        </div>
-
         <dialog
           id="addAccountModal"
           className="modal modal-bottom sm:modal-middle"
