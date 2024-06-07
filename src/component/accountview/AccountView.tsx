@@ -7,9 +7,8 @@ const AccountView = () => {
       <div className="flex items-baseline">
         <p className="text-4xl mt-1">123 456</p>
         {/* copy icon */}
-        <div className="w-4 h-4 ml-1">
-          <MdContentCopy />
-        </div>
+        <MdContentCopy className="w-4 h-4 ml-1"/>
+
         {/* time counter */}
         <div
           className="radial-progress bg-base-300 ml-auto"
