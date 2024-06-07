@@ -1,12 +1,28 @@
 import Header from "./component/header/Header";
 import AccountView from "./component/accountview/AccountView";
+import { useState } from "react";
 
 function App() {
+  const [accountName, setAccountName] = useState("");
+  const [secret, setSecret] = useState("");
+
+  const printValue = (a: string, s: string) => {
+    console.log(a);
+    console.log(s);
+  };
 
   return (
     <>
       <div id="app" className="w-full flex justify-center">
-        <dialog id="addAccountModal" className="modal modal-bottom sm:modal-middle">
+        <div>
+          <p>{accountName}</p>
+          <p>{secret}</p>
+        </div>
+
+        <dialog
+          id="addAccountModal"
+          className="modal modal-bottom sm:modal-middle"
+        >
           <div className="modal-box">
             <h3 className="font-bold text-base">コードを追加</h3>
 
@@ -17,9 +33,12 @@ function App() {
                   <span className="label-text-alt">必須</span>
                 </div>
                 <input
+                  id="account"
                   type="text"
                   placeholder="Account Name"
                   className="input input-sm input-bordered w-full max-w-xs"
+                  onChange={(e) => setAccountName(e.target.value)}
+                  value={accountName}
                 />
               </label>
             </div>
@@ -34,6 +53,8 @@ function App() {
                   type="text"
                   placeholder="Key"
                   className="input input-sm input-bordered w-full max-w-xs"
+                  onChange={(e) => setSecret(e.target.value)}
+                  value={secret}
                 />
               </label>
             </div>
@@ -41,8 +62,21 @@ function App() {
             <div className="modal-action">
               <form method="dialog">
                 {/* if there is a button in form, it will close the modal */}
-                <button className="btn">閉じる</button>
-                <button className="btn btn-primary ml-2">追加</button>
+                <button
+                  className="btn"
+                  onClick={() => {
+                    setAccountName("");
+                    setSecret("");
+                  }}
+                >
+                  閉じる
+                </button>
+                <button
+                  className="btn btn-primary ml-2"
+                  onClick={() => printValue(accountName, secret)}
+                >
+                  追加
+                </button>
               </form>
             </div>
           </div>
