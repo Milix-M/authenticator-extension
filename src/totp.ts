@@ -37,6 +37,12 @@ export class Totp {
     return this.hotp(key, cnt);
   }
 
+  /**
+   * HOTPの値を計算します
+   * @param key 共有されたシークレット
+   * @param cnt カウンター
+   * @returns 6桁のHOTPの計算結果
+   */
   public hotp(key: Buffer, cnt: number): string {
     const buf = Buffer.alloc(8);
     buf.writeUInt32BE(Math.floor(cnt / 2 ** 32), 0);
@@ -76,7 +82,7 @@ export class Totp {
   /**
    * Base32文字列をBufferに変換します
    * @param str
-   * @returns 
+   * @returns
    */
   public decodeB32Code(str: string): Buffer {
     str = str.toUpperCase().replace(/[^A-Z234567]/g, "");
