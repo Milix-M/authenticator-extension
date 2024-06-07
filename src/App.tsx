@@ -5,10 +5,12 @@ import { useState } from "react";
 function App() {
   const [accountName, setAccountName] = useState("");
   const [secret, setSecret] = useState("");
+  const [otpType, setOtpType] = useState("totp");
 
-  const printValue = (a: string, s: string) => {
+  const printValue = (a: string, s: string, t: string) => {
     console.log(a);
     console.log(s);
+    console.log(t);
   };
 
   return (
@@ -17,6 +19,7 @@ function App() {
         <div>
           <p>{accountName}</p>
           <p>{secret}</p>
+          <p>{otpType}</p>
         </div>
 
         <dialog
@@ -59,6 +62,23 @@ function App() {
               </label>
             </div>
 
+            <div className="mt-2 flex justify-center">
+              <label className="form-control w-full max-w-xs">
+                <div className="label">
+                  <span className="label-text">タイプ</span>
+                  <span className="label-text-alt">必須</span>
+                </div>
+                <select
+                  className="select select-bordered select-sm"
+                  onChange={(e) => setOtpType(e.target.value)}
+                  value={otpType}
+                >
+                  <option value="totp">TOTP</option>
+                  <option value="hotp">HOTP</option>
+                </select>
+              </label>
+            </div>
+
             <div className="modal-action">
               <form method="dialog">
                 {/* if there is a button in form, it will close the modal */}
@@ -67,13 +87,14 @@ function App() {
                   onClick={() => {
                     setAccountName("");
                     setSecret("");
+                    setOtpType("totp");
                   }}
                 >
                   閉じる
                 </button>
                 <button
                   className="btn btn-primary ml-2"
-                  onClick={() => printValue(accountName, secret)}
+                  onClick={() => printValue(accountName, secret, otpType)}
                 >
                   追加
                 </button>
