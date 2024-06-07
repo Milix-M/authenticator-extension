@@ -88,7 +88,12 @@ function App() {
                 </button>
                 <button
                   className="btn btn-primary ml-2"
-                  onClick={() => printValue(accountName, secret, otpType)}
+                  onClick={() => {
+                    printValue(accountName, secret, otpType)
+                    setAccountName("");
+                    setSecret("");
+                    setOtpType("totp");
+                  }}
                 >
                   追加
                 </button>
