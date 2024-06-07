@@ -58,7 +58,6 @@ if (p !== null) {
   p.textContent = genTwoFaCode("thisisasecretkey", "totp");
 }
 
-const stp = new StorageProvider();
-stp.setSecret(new Account(0, "thisisasecretkey", "totp", "テスト"));
-stp.getSecret();
-
+// const stp = new StorageProvider();
+// stp.setSecret(new Account(0, "thisisasecretkey", "totp", "テスト", 12, "osa"));
+// stp.getSecrets();
