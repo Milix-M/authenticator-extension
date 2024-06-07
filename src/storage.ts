@@ -17,44 +17,50 @@ export class StorageProvider {
     });
   }
 
-  public async getSecret() {
+  public async getSecrets() {
     const bucket = getBucket("acc-bucket", "sync");
-
     const secrets = await bucket.get();
 
+    // Accountの配列に入れてあげる
+    let accounts: Account[] = [];
     for (let [_, v] of Object.entries(secrets)) {
-      this.decodeEncryptAccount(v);
+      accounts.push(this.decodeEncryptAccount(v));
     }
 
+    return accounts;
   }
 
   /**
    * Accountクラスの属性を元にパスワードにより暗号化された文字列を生成します
-   * TODO: JSONで扱う
    *
    * @param account
-   * @returns
+   * @returns 暗号化されたAcccountクラス　文字列
    */
   private genSavingEncryptString(account: Account): string {
-    let buildString = "";
-
-    // まずtype(totp or hotp)格納
-    buildString += account.type + ":";
-    // secret格納
-    buildString += account.secret + ":";
-    // 次にlabel
-    buildString += account.label;
-    // あればcounter
-    if (account.counter !== undefined) {
-      buildString += ":" + account.counter;
-    }
-    //　あればissuer
-    if (account.issuer !== undefined) {
-      buildString += ":" + account.issuer;
-    }
+    const accountJson = JSON.stringify(account);
 
     // 暗号化して返却
-    return crypto.AES.encrypt(buildString, this.readPassword()).toString();
+    return crypto.AES.encrypt(accountJson, this.readPassword()).toString();
+  }
+
+  /**
+   * 暗号化されたAccountクラスを復号化します
+   * @param encryptStr 暗号化されたAccount
+   * @returns 復号化されたAccount
+   */
+  private decodeEncryptAccount(encryptStr: string): Account {
+    const decodedAccount = crypto.AES.decrypt(
+      encryptStr,
+      this.readPassword()
+    ).toString(CryptoJS.enc.Utf8);
+
+    // Accountクラスに戻す
+    const account: Account = Object.assign(
+      new Account(0, "", "totp", ""),
+      JSON.parse(decodedAccount)
+    );
+
+    return account;
   }
 
   /**
@@ -70,15 +76,5 @@ export class StorageProvider {
     }
 
     return password;
-  }
-
-  /**
-   * 暗号化されたAccountクラスを復号化します
-   * @param encryptStr 暗号化されたAccount
-   */
-  private decodeEncryptAccount(encryptStr: string) {
-    const decodedAccount = crypto.AES.decrypt(encryptStr, this.readPassword()).toString(CryptoJS.enc.Utf8);
-
-    console.log(decodedAccount)
   }
 }
