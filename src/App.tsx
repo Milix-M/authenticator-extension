@@ -1,16 +1,38 @@
 import Header from "./component/header/Header";
 import AccountView from "./component/accountview/AccountView";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [accountName, setAccountName] = useState("");
   const [secret, setSecret] = useState("");
   const [otpType, setOtpType] = useState("totp");
+  const [isBtnDisabled, setIsBtnDisabled] = useState(true);
 
-  const printValue = (a: string, s: string, t: string) => {
-    console.log(a);
-    console.log(s);
-    console.log(t);
+  useEffect(() => {
+    if (checkInputValue(accountName, secret, otpType)) {
+      setIsBtnDisabled(false);
+    } else {
+      setIsBtnDisabled(true)
+    }
+  }, [accountName, secret, otpType]);
+
+  const checkInputValue = (
+    accountName: string,
+    secret: string,
+    otpType: string
+  ) => {
+    if (
+      accountName.length >= 1 &&
+      secret.length >= 1 &&
+      otpType.length >= 1
+    ) {
+      if (secret.length >= 16 && (otpType === "totp" || otpType === "hotp")) {
+        /** 各引数のlengthの長さが1以上 & secretが16文字, otpTypeがtotp or hotpの時のみ成功 */
+        return true;
+      }
+    }
+
+    return false;
   };
 
   return (
@@ -23,7 +45,7 @@ function App() {
           <div className="modal-box">
             <h3 className="font-bold text-base">コードを追加</h3>
 
-            <div className="mt-2 flex justify-center">
+            <div className="mt-1 flex justify-center">
               <label className="form-control w-full max-w-xs ">
                 <div className="label py-1">
                   <span className="label-text">アカウント名</span>
@@ -40,7 +62,7 @@ function App() {
               </label>
             </div>
 
-            <div className="mt-2 flex justify-center">
+            <div className="mt-1 flex justify-center">
               <label className="form-control w-full max-w-xs ">
                 <div className="label py-1">
                   <span className="label-text">キー</span>
@@ -56,7 +78,7 @@ function App() {
               </label>
             </div>
 
-            <div className="mt-2 flex justify-center">
+            <div className="mt-1 flex justify-center">
               <label className="form-control w-full max-w-xs">
                 <div className="label">
                   <span className="label-text">タイプ</span>
@@ -89,11 +111,14 @@ function App() {
                 <button
                   className="btn btn-primary ml-2"
                   onClick={() => {
-                    printValue(accountName, secret, otpType)
-                    setAccountName("");
-                    setSecret("");
-                    setOtpType("totp");
+                    if (checkInputValue(accountName, secret, otpType)) {
+                      console.log(accountName, secret, otpType);
+                      setAccountName("");
+                      setSecret("");
+                      setOtpType("totp");
+                    }
                   }}
+                  disabled={isBtnDisabled}
                 >
                   追加
                 </button>
