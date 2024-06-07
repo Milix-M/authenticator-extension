@@ -30,7 +30,3 @@ export const genTwoFaCode = (
 
   return code;
 };
-
-// const stp = new StorageProvider();
-// stp.setSecret(new Account(0, "thisisasecretkey", "totp", "テスト", 12, "osa"));
-// stp.getSecrets();
