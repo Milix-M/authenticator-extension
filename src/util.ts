@@ -1,5 +1,3 @@
-import { Account } from "./models/account.ts";
-import { StorageProvider } from "./storage.ts";
 import { Totp } from "./totp.ts";
 
 /**
@@ -9,7 +7,7 @@ import { Totp } from "./totp.ts";
  * @param counter HOTPのカウンタ
  * @returns 6桁の計算結果
  */
-const genTwoFaCode = (
+export const genTwoFaCode = (
   secret: string,
   type: "totp" | "hotp",
   counter?: number
@@ -32,31 +30,6 @@ const genTwoFaCode = (
 
   return code;
 };
-
-/**
- * daisyuiのテーマを設定します.
- */
-const setTheme = () => {
-  const htmltag = document.querySelector("html");
-  let theme = "dark";
-
-  // 環境変数にテーマが設定してあれば読み込む
-  if (import.meta.env.VITE_DAISYUI_THEME !== undefined) {
-    theme = import.meta.env.VITE_DAISYUI_THEME;
-  }
-
-  // htmlタグにテーマ設定
-  if (htmltag !== null) {
-    htmltag.setAttribute("data-theme", theme);
-  }
-};
-
-setTheme();
-
-const p = document.getElementById("code");
-if (p !== null) {
-  p.textContent = genTwoFaCode("thisisasecretkey", "totp");
-}
 
 // const stp = new StorageProvider();
 // stp.setSecret(new Account(0, "thisisasecretkey", "totp", "テスト", 12, "osa"));
