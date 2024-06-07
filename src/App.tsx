@@ -2,13 +2,6 @@ import Header from "./component/header/Header";
 import AccountView from "./component/accountview/AccountView";
 
 function App() {
-  const showModal = () => {
-    const modal = document.getElementById("addAccountModal") as HTMLDialogElement;
-
-    if (modal !== null) {
-      modal.showModal();
-    }
-  };
 
   return (
     <>
@@ -69,11 +62,6 @@ function App() {
             <AccountView />
             <AccountView />
           </div>
-
-          {/* Open the modal using document.getElementById('ID').showModal() method */}
-          <button className="btn" onClick={() => showModal()}>
-            open modal
-          </button>
         </div>
       </div>
     </>
