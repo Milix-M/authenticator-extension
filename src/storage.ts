@@ -2,6 +2,7 @@ import { Account } from "./models/account";
 import crypto from "crypto-js";
 import CryptoJS from "crypto-js";
 import { getBucket } from "@extend-chrome/storage";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * シークレット, カウンタなどの情報をinput, outputするクラス
@@ -13,7 +14,7 @@ export class StorageProvider {
     const bucket = getBucket("acc-bucket", "sync");
 
     bucket.set({
-      [account.dbId]: encryptedAccount,
+      [account.accountUUID]: encryptedAccount,
     });
   }
 
@@ -22,8 +23,9 @@ export class StorageProvider {
     const secrets = await bucket.get();
 
     // Accountの配列に入れてあげる
-    let accounts: Account[] = [];
-    for (let [_, v] of Object.entries(secrets)) {
+    const accounts: Account[] = [];
+    // Mapにすべき？
+    for (const [_, v] of Object.entries(secrets)) {
       accounts.push(this.decodeEncryptAccount(v));
     }
 
@@ -34,7 +36,7 @@ export class StorageProvider {
    * Accountクラスの属性を元にパスワードにより暗号化された文字列を生成します
    *
    * @param account
-   * @returns 暗号化されたAcccountクラス　文字列
+   * @returns 暗号化されたAcccountクラス文字列
    */
   private genSavingEncryptString(account: Account): string {
     const accountJson = JSON.stringify(account);
@@ -56,7 +58,7 @@ export class StorageProvider {
 
     // Accountクラスに戻す
     const account: Account = Object.assign(
-      new Account(0, "", "totp", ""),
+      new Account(uuidv4(), "", "totp", ""),
       JSON.parse(decodedAccount)
     );
 
