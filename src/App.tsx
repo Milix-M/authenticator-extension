@@ -12,7 +12,7 @@ function App() {
     if (checkInputValue(accountName, secret, otpType)) {
       setIsBtnDisabled(false);
     } else {
-      setIsBtnDisabled(true)
+      setIsBtnDisabled(true);
     }
   }, [accountName, secret, otpType]);
 
@@ -21,11 +21,7 @@ function App() {
     secret: string,
     otpType: string
   ) => {
-    if (
-      accountName.length >= 1 &&
-      secret.length >= 1 &&
-      otpType.length >= 1
-    ) {
+    if (accountName.length >= 1 && secret.length >= 1 && otpType.length >= 1) {
       if (secret.length >= 16 && (otpType === "totp" || otpType === "hotp")) {
         /** 各引数のlengthの長さが1以上 & secretが16文字, otpTypeがtotp or hotpの時のみ成功 */
         return true;
