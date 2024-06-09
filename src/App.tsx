@@ -11,7 +11,19 @@ function App() {
   const [otpType, setOtpType] = useState("totp");
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
 
-  const storageProvider = new StorageProvider()
+  const storageProvider = new StorageProvider();
+
+  // アカウント取ってくる
+  const [accounts, setAccounts] = useState<Account[]>();
+  useEffect(() => {
+    const getAccounts = async () => {
+      const res = await storageProvider.getSecrets();
+      setAccounts(res);
+    };
+
+    getAccounts();
+    console.log("実行");
+  }, []);
 
   useEffect(() => {
     if (checkInputValue(accountName, secret, otpType)) {
@@ -42,7 +54,7 @@ function App() {
     setAccountName("");
     setSecret("");
     setOtpType("totp");
-  }
+  };
 
   return (
     <>
@@ -110,7 +122,7 @@ function App() {
                 <button
                   className="btn"
                   onClick={() => {
-                    resetInputForm()
+                    resetInputForm();
                   }}
                 >
                   閉じる
@@ -119,9 +131,16 @@ function App() {
                   className="btn btn-primary ml-2"
                   onClick={() => {
                     if (checkInputValue(accountName, secret, otpType)) {
-                      // secretセットしてフォームリセット
-                      storageProvider.setSecret(new Account(uuidv4(), secret, otpType, accountName))
-                        .then(() => resetInputForm());
+                      const newAccount = new Account(uuidv4(), secret, otpType, accountName);
+
+                      storageProvider
+                      .setSecret(
+                        newAccount
+                      )
+                      .then(function() {
+                        setAccounts([...accounts as Account[], newAccount])
+                        resetInputForm();
+                      });
                     }
                   }}
                   disabled={isBtnDisabled}
@@ -134,18 +153,13 @@ function App() {
         </dialog>
 
         <div className="max-w-xs w-full bg-base-200 flex flex-col">
-          {/* debug */}
-          {/* <p>{code}</p> */}
-
           <Header />
 
           {/* main */}
           <div className="p-2 space-y-2 flex-grow h-96 overflow-y-scroll scrollbar-thin">
-            <AccountView />
-            <AccountView />
-            <AccountView />
-            <AccountView />
-            <AccountView />
+            {accounts?.map((account) => (
+              <AccountView label={account.label} code={123456} />
+            ))}
           </div>
         </div>
       </div>
