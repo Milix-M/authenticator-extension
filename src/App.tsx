@@ -1,12 +1,17 @@
 import Header from "./component/header/Header";
 import AccountView from "./component/accountview/AccountView";
 import { useEffect, useState } from "react";
+import { StorageProvider } from "./storage";
+import { Account } from "./models/account";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [accountName, setAccountName] = useState("");
   const [secret, setSecret] = useState("");
   const [otpType, setOtpType] = useState("totp");
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
+
+  const storageProvider = new StorageProvider()
 
   useEffect(() => {
     if (checkInputValue(accountName, secret, otpType)) {
@@ -16,6 +21,7 @@ function App() {
     }
   }, [accountName, secret, otpType]);
 
+  /** アカウント追加フォームの入力値を検証します */
   const checkInputValue = (
     accountName: string,
     secret: string,
@@ -30,6 +36,13 @@ function App() {
 
     return false;
   };
+
+  /** アカウント追加フォームをリセットします */
+  const resetInputForm = () => {
+    setAccountName("");
+    setSecret("");
+    setOtpType("totp");
+  }
 
   return (
     <>
@@ -97,9 +110,7 @@ function App() {
                 <button
                   className="btn"
                   onClick={() => {
-                    setAccountName("");
-                    setSecret("");
-                    setOtpType("totp");
+                    resetInputForm()
                   }}
                 >
                   閉じる
@@ -108,10 +119,9 @@ function App() {
                   className="btn btn-primary ml-2"
                   onClick={() => {
                     if (checkInputValue(accountName, secret, otpType)) {
-                      console.log(accountName, secret, otpType);
-                      setAccountName("");
-                      setSecret("");
-                      setOtpType("totp");
+                      // secretセットしてフォームリセット
+                      storageProvider.setSecret(new Account(uuidv4(), secret, otpType, accountName))
+                        .then(() => resetInputForm());
                     }
                   }}
                   disabled={isBtnDisabled}
