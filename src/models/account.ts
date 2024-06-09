@@ -2,7 +2,7 @@ export class Account {
   constructor(
     public accountUUID: string,
     public secret: string,
-    public type: "totp" | "hotp",
+    public type: string,
     public label: string,
     public counter?: number,
     public issuer?: string

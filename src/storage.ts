@@ -8,12 +8,12 @@ import { v4 as uuidv4 } from "uuid";
  * シークレット, カウンタなどの情報をinput, outputするクラス
  */
 export class StorageProvider {
-  public setSecret(account: Account) {
+  public async setSecret(account: Account) {
     const encryptedAccount = this.genSavingEncryptString(account);
 
     const bucket = getBucket("acc-bucket", "sync");
 
-    bucket.set({
+    await bucket.set({
       [account.accountUUID]: encryptedAccount,
     });
   }
