@@ -1,11 +1,16 @@
 import { MdContentCopy } from "react-icons/md";
 
-const AccountView = () => {
+interface accountProps {
+  label: string,
+  code: number,
+}
+
+const AccountView: React.FC<accountProps> = ({ label, code }) => {
   return (
     <div className="bg-base-100 border p-2 rounded">
-      <p className="text-sm">Twitter @hirakegoma</p>
+      <p className="text-sm">{label}</p>
       <div className="flex items-baseline">
-        <p className="text-4xl mt-1">123 456</p>
+        <p className="text-4xl mt-1">{code}</p>
         {/* copy icon */}
         <MdContentCopy className="w-4 h-4 ml-1"/>
 
