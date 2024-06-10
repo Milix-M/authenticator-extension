@@ -1,15 +1,28 @@
 import { FiTrash } from "react-icons/fi";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { MdContentCopy } from "react-icons/md";
+import { StorageProvider } from "../../storage";
+import { Account } from "../../models/account";
 
 interface accountProps {
   label: string;
   code: number;
+  accountUUID: string;
+  setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
 }
 
-const AccountView: React.FC<accountProps> = ({ label, code }) => {
+const AccountView: React.FC<accountProps> = ({
+  label,
+  code,
+  accountUUID,
+  setAccounts,
+}) => {
+  const storageProvider = new StorageProvider();
+
   const showDeleteConfirmModal = () => {
-    const modal = document.getElementById("delteAccountModal") as HTMLDialogElement;
+    const modal = document.getElementById(
+      "delteAccountModal"
+    ) as HTMLDialogElement;
 
     if (modal !== null) {
       modal.showModal();
@@ -32,7 +45,16 @@ const AccountView: React.FC<accountProps> = ({ label, code }) => {
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button className="btn">キャンセル</button>
-              <button className="btn btn-primary ml-2" onClick={() => {}}>
+              <button
+                className="btn btn-primary ml-2"
+                onClick={async () => {
+                  await storageProvider
+                    .removeSecret(accountUUID)
+                    .then(async () =>
+                      setAccounts(await storageProvider.getSecrets())
+                    );
+                }}
+              >
                 実行
               </button>
             </form>
@@ -45,7 +67,12 @@ const AccountView: React.FC<accountProps> = ({ label, code }) => {
           <p className="text-sm">{label}</p>
           <div className="ml-auto flex items-center">
             <HiOutlinePencilAlt className="w-4 h-4 mr-1 hidden group-hover:block" />
-            <FiTrash className="w-4 h-4 hidden group-hover:block hover:cursor-pointer" onClick={() => {showDeleteConfirmModal()}}/>
+            <FiTrash
+              className="w-4 h-4 hidden group-hover:block hover:cursor-pointer"
+              onClick={() => {
+                showDeleteConfirmModal();
+              }}
+            />
           </div>
         </div>
         <div className="flex items-baseline">
