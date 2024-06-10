@@ -4,14 +4,38 @@ import { useEffect, useState } from "react";
 import { StorageProvider } from "./storage";
 import { Account } from "./models/account";
 import { v4 as uuidv4 } from "uuid";
+import useInterval from "use-interval";
 
 function App() {
   const [accountName, setAccountName] = useState("");
   const [secret, setSecret] = useState("");
   const [otpType, setOtpType] = useState("totp");
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
+  const [interval, setInterval] = useState<number>(0);
 
   const storageProvider = new StorageProvider();
+
+  /**
+   * 残り秒数カウンターのパーセンテージを計算して表示します
+   * @param period 更新秒数
+   * @returns コード更新までのパーセント
+   */
+  const counterPercentage = (period: number) => {
+    const now = Math.floor(Date.now() / 1000);
+    const remainingSeconds = period - (now % period);
+
+    // パーセンテージに変換
+    const percentage = Math.floor((remainingSeconds / period) * 100);
+
+    return percentage;
+  }
+
+  /** 1000ms事に秒数更新 */
+  useInterval(() => {
+    setInterval(counterPercentage(30));
+  }, 1000);
+
+  counterPercentage(30);
 
   // アカウント取ってくる
   const [accounts, setAccounts] = useState<Account[]>();
@@ -159,7 +183,7 @@ function App() {
           {/* main */}
           <div className="p-2 space-y-2 flex-grow h-96 overflow-y-scroll scrollbar-thin">
             {accounts?.map((account) => (
-              <AccountView account={account} setAccounts={setAccounts} />
+              <AccountView account={account} setAccounts={setAccounts} timeCounter={interval} />
             ))}
           </div>
         </div>
