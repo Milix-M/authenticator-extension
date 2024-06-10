@@ -158,7 +158,7 @@ function App() {
           {/* main */}
           <div className="p-2 space-y-2 flex-grow h-96 overflow-y-scroll scrollbar-thin">
             {accounts?.map((account) => (
-              <AccountView label={account.label} code={123456} />
+              <AccountView label={account.label} code={123456} accountUUID={account.accountUUID} setAccounts={setAccounts} />
             ))}
           </div>
         </div>
