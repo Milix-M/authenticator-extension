@@ -8,19 +8,18 @@ import { v4 as uuidv4 } from "uuid";
  * シークレット, カウンタなどの情報をinput, outputするクラス
  */
 export class StorageProvider {
+  private readonly bucket = getBucket("acc-bucket", "sync");
+
   public async setSecret(account: Account) {
     const encryptedAccount = this.genSavingEncryptString(account);
 
-    const bucket = getBucket("acc-bucket", "sync");
-
-    await bucket.set({
+    await this.bucket.set({
       [account.accountUUID]: encryptedAccount,
     });
   }
 
   public async getSecrets() {
-    const bucket = getBucket("acc-bucket", "sync");
-    const secrets = await bucket.get();
+    const secrets = await this.bucket.get();
 
     // Accountの配列に入れてあげる
     const accounts: Account[] = [];
@@ -30,6 +29,16 @@ export class StorageProvider {
     }
 
     return accounts;
+  }
+
+  /**
+   * シークレットを削除します
+   * @param accountUUID アカウントのuuid
+   */
+  public async removeSecret(accountUUID: string) {
+    // const secrets = await this.bucket.get();
+
+    await this.bucket.remove(accountUUID);
   }
 
   /**
