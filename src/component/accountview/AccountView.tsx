@@ -3,14 +3,14 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import { MdContentCopy } from "react-icons/md";
 import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
-import { genTwoFaCode } from "../../util";
 
 interface accountProps {
   account: Account;
   setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
+  timeCounter: number;
 }
 
-const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
+const AccountView: React.FC<accountProps> = ({ account, setAccounts, timeCounter }) => {
   const storageProvider = new StorageProvider();
 
   const showDeleteConfirmModal = () => {
@@ -71,7 +71,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
         </div>
         <div className="flex items-baseline">
           <p className="text-4xl mt-1">
-            {genTwoFaCode(account.secret, "totp")}
+            {account.genTwoFaCode()}
           </p>
           {/* copy icon */}
           <MdContentCopy className="w-4 h-4 ml-1" />
@@ -79,7 +79,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
           {/* time counter */}
           <div
             className="radial-progress bg-base-300 ml-auto"
-            style={{ ["--value" as any]: 70, ["--size" as any]: "1.8em" }}
+            style={{ ["--value" as string]: timeCounter, ["--size" as string]: "1.8em" }}
             role="progressbar"
           ></div>
         </div>
