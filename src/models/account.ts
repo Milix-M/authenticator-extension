@@ -7,6 +7,4 @@ export class Account {
     public counter?: number,
     public issuer?: string
   ) {}
-
-
 }

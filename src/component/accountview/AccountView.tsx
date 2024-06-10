@@ -10,10 +10,7 @@ interface accountProps {
   setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
 }
 
-const AccountView: React.FC<accountProps> = ({
-  account,
-  setAccounts,
-}) => {
+const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
   const storageProvider = new StorageProvider();
 
   const showDeleteConfirmModal = () => {
@@ -73,7 +70,9 @@ const AccountView: React.FC<accountProps> = ({
           </div>
         </div>
         <div className="flex items-baseline">
-          <p className="text-4xl mt-1">{genTwoFaCode(account.secret, "totp")}</p>
+          <p className="text-4xl mt-1">
+            {genTwoFaCode(account.secret, "totp")}
+          </p>
           {/* copy icon */}
           <MdContentCopy className="w-4 h-4 ml-1" />
 
