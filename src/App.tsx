@@ -131,14 +131,15 @@ function App() {
                   className="btn btn-primary ml-2"
                   onClick={() => {
                     if (checkInputValue(accountName, secret, otpType)) {
-                      const newAccount = new Account(uuidv4(), secret, otpType, accountName);
+                      const newAccount = new Account(
+                        uuidv4(),
+                        secret,
+                        otpType,
+                        accountName
+                      );
 
-                      storageProvider
-                      .setSecret(
-                        newAccount
-                      )
-                      .then(function() {
-                        setAccounts([...accounts as Account[], newAccount])
+                      storageProvider.setSecret(newAccount).then(function () {
+                        setAccounts([...(accounts as Account[]), newAccount]);
                         resetInputForm();
                       });
                     }
@@ -158,7 +159,12 @@ function App() {
           {/* main */}
           <div className="p-2 space-y-2 flex-grow h-96 overflow-y-scroll scrollbar-thin">
             {accounts?.map((account) => (
-              <AccountView label={account.label} code={123456} accountUUID={account.accountUUID} setAccounts={setAccounts} />
+              <AccountView
+                label={account.label}
+                code={123456}
+                accountUUID={account.accountUUID}
+                setAccounts={setAccounts}
+              />
             ))}
           </div>
         </div>
