@@ -64,7 +64,7 @@ function App() {
           className="modal modal-bottom sm:modal-middle"
         >
           <div className="modal-box">
-            <h3 className="font-bold text-base">コードを追加</h3>
+            <h3 className="font-bold text-lg">アカウントを追加</h3>
 
             <div className="mt-1 flex justify-center">
               <label className="form-control w-full max-w-xs ">
@@ -125,7 +125,7 @@ function App() {
                     resetInputForm();
                   }}
                 >
-                  閉じる
+                  キャンセル
                 </button>
                 <button
                   className="btn btn-primary ml-2"
