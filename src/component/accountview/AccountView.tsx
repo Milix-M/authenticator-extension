@@ -4,20 +4,17 @@ import { MdContentCopy } from "react-icons/md";
 import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
 import { useRef, useState } from "react";
+import useInterval from "use-interval";
 
 interface accountProps {
   account: Account;
   setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
-  timeCounter: number;
 }
 
-const AccountView: React.FC<accountProps> = ({
-  account,
-  setAccounts,
-  timeCounter,
-}) => {
+const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
   // コピー完了toast管理state
   const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
+  const [persentage, setParsentage] = useState<number>(0);
   const storageProvider = new StorageProvider();
 
   const delConfirmModalRef = useRef<HTMLDialogElement>(null);
@@ -46,6 +43,25 @@ const AccountView: React.FC<accountProps> = ({
       setShowCopiedMsg(false);
     }, 2000);
   };
+
+  /**
+   * 残り秒数カウンターのパーセンテージを計算して表示します
+   * @returns コード更新までのパーセント
+   */
+  const counterPercentage = () => {
+    const now = Math.floor(Date.now() / 1000);
+    const remainingSeconds = account.timeStep - (now % account.timeStep);
+
+    // パーセンテージに変換
+    const percentage = Math.floor((remainingSeconds / account.timeStep) * 100);
+
+    return percentage;
+  };
+
+  /** 1000ms事に秒数更新 */
+  useInterval(() => {
+    setParsentage(counterPercentage());
+  }, 1000);
 
   return (
     <>
@@ -86,21 +102,21 @@ const AccountView: React.FC<accountProps> = ({
           <p className="break-words text-sm mt-2"></p>
 
           <div className="mt-1 flex justify-center">
-              <label className="form-control w-full max-w-xs ">
-                <div className="label py-1">
-                  <span className="label-text">アカウント名</span>
-                  <span className="label-text-alt">必須</span>
-                </div>
-                <input
-                  id="account"
-                  type="text"
-                  placeholder="Account Name"
-                  className="input input-sm input-bordered w-full max-w-xs"
-                  onChange={() => {}}
-                  value={account.label}
-                />
-              </label>
-            </div>
+            <label className="form-control w-full max-w-xs ">
+              <div className="label py-1">
+                <span className="label-text">アカウント名</span>
+                <span className="label-text-alt">必須</span>
+              </div>
+              <input
+                id="account"
+                type="text"
+                placeholder="Account Name"
+                className="input input-sm input-bordered w-full max-w-xs"
+                onChange={() => {}}
+                value={account.label}
+              />
+            </label>
+          </div>
 
           <div className="modal-action">
             <form method="dialog">
@@ -156,7 +172,7 @@ const AccountView: React.FC<accountProps> = ({
           <div
             className="radial-progress bg-base-300 ml-auto"
             style={{
-              ["--value" as string]: timeCounter,
+              ["--value" as string]: persentage,
               ["--size" as string]: "1.8em",
             }}
             role="progressbar"
