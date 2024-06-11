@@ -3,7 +3,7 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import { MdContentCopy } from "react-icons/md";
 import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 interface accountProps {
   account: Account;
@@ -29,6 +29,16 @@ const AccountView: React.FC<accountProps> = ({
       modal.showModal();
     }
   };
+
+
+  const modalRef = useRef<HTMLDialogElement>(null);
+  const showAccountEditModal = () => {
+
+    if (modalRef.current !== null) {
+      modalRef.current.showModal();
+    }
+  };
+
 
   const copyToClipboard = async () => {
     await global.navigator.clipboard.writeText(account.genTwoFaCode());
@@ -71,6 +81,26 @@ const AccountView: React.FC<accountProps> = ({
         </div>
       </dialog>
 
+      <dialog
+        ref={modalRef}
+        className="modal modal-bottom sm:modal-middle"
+      >
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">アカウント編集</h3>
+          <p className="break-words text-sm mt-2"></p>
+
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">キャンセル</button>
+              <button className="btn btn-primary ml-2" onClick={() => {}}>
+                保存
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
       <div className="group bg-base-100 border p-2 rounded">
         {showCopiedMsg && (
           <div className="toast toast-center toast-middle z-[100] select-none">
@@ -83,7 +113,12 @@ const AccountView: React.FC<accountProps> = ({
         <div className="flex items-center">
           <p className="text-sm">{account.label}</p>
           <div className="ml-auto flex items-center">
-            <HiOutlinePencilAlt className="w-4 h-4 mr-1 hidden group-hover:block" />
+            <HiOutlinePencilAlt
+              className="w-4 h-4 mr-1 hidden group-hover:block hover:cursor-pointer"
+              onClick={() => {
+                showAccountEditModal();
+              }}
+            />
             <FiTrash
               className="w-4 h-4 hidden group-hover:block hover:cursor-pointer"
               onClick={() => {
