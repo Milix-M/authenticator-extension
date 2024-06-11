@@ -28,7 +28,7 @@ function App() {
     const percentage = Math.floor((remainingSeconds / period) * 100);
 
     return percentage;
-  }
+  };
 
   /** 1000ms事に秒数更新 */
   useInterval(() => {
@@ -183,7 +183,11 @@ function App() {
           {/* main */}
           <div className="p-2 space-y-2 flex-grow h-96 overflow-y-scroll scrollbar-thin">
             {accounts?.map((account) => (
-              <AccountView account={account} setAccounts={setAccounts} timeCounter={interval} />
+              <AccountView
+                account={account}
+                setAccounts={setAccounts}
+                timeCounter={interval}
+              />
             ))}
           </div>
         </div>
