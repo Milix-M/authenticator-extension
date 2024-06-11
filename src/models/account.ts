@@ -6,8 +6,9 @@ export class Account {
     public secret: string,
     public type: string,
     public label: string,
+    public timeStep: number = 30,
     public counter?: number,
-    public issuer?: string
+    public issuer?: string,
   ) {}
 
   /**
@@ -18,11 +19,11 @@ export class Account {
     let code = "";
 
     if (this.type === "totp") {
-      const totp = new Totp(6, 30);
+      const totp = new Totp(6, this.timeStep);
       const key = totp.decodeB32Code(this.secret);
       code = totp.totp(key, new Date());
     } else if (this.type === "hotp") {
-      const hotp = new Totp(6, 30);
+      const hotp = new Totp(6, this.timeStep);
       const key = hotp.decodeB32Code(this.secret);
 
       // counterが入ってなければデフォルトで0いれる
