@@ -10,7 +10,11 @@ interface accountProps {
   timeCounter: number;
 }
 
-const AccountView: React.FC<accountProps> = ({ account, setAccounts, timeCounter }) => {
+const AccountView: React.FC<accountProps> = ({
+  account,
+  setAccounts,
+  timeCounter,
+}) => {
   const storageProvider = new StorageProvider();
 
   const showDeleteConfirmModal = () => {
@@ -21,6 +25,10 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts, timeCounter
     if (modal !== null) {
       modal.showModal();
     }
+  };
+
+  const copyToClipboard = async () => {
+    await global.navigator.clipboard.writeText(account.genTwoFaCode());
   };
 
   return (
@@ -70,16 +78,22 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts, timeCounter
           </div>
         </div>
         <div className="flex items-baseline">
-          <p className="text-4xl mt-1">
+          <p className="text-4xl mt-1 tracking-wider">
             {account.genTwoFaCode()}
           </p>
           {/* copy icon */}
-          <MdContentCopy className="w-4 h-4 ml-1" />
+          <MdContentCopy
+            className="w-4 h-4 ml-1 hover:cursor-pointer"
+            onClick={() => copyToClipboard()}
+          />
 
           {/* time counter */}
           <div
             className="radial-progress bg-base-300 ml-auto"
-            style={{ ["--value" as string]: timeCounter, ["--size" as string]: "1.8em" }}
+            style={{
+              ["--value" as string]: timeCounter,
+              ["--size" as string]: "1.8em",
+            }}
             role="progressbar"
           ></div>
         </div>
