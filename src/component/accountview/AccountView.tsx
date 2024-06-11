@@ -16,30 +16,29 @@ const AccountView: React.FC<accountProps> = ({
   setAccounts,
   timeCounter,
 }) => {
+  // コピー完了toast管理state
   const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
-
   const storageProvider = new StorageProvider();
 
+  const delConfirmModalRef = useRef<HTMLDialogElement>(null);
+  /** 削除確認モーダルを表示します */
   const showDeleteConfirmModal = () => {
-    const modal = document.getElementById(
-      "delteAccountModal"
-    ) as HTMLDialogElement;
-
-    if (modal !== null) {
-      modal.showModal();
+    if (delConfirmModalRef.current !== null) {
+      delConfirmModalRef.current.showModal();
     }
   };
 
-
   const modalRef = useRef<HTMLDialogElement>(null);
+  /** アカウント編集モーダルを表示します */
   const showAccountEditModal = () => {
-
     if (modalRef.current !== null) {
       modalRef.current.showModal();
     }
   };
 
-
+  /**
+   * クリップボードに二段階認証をコピーして、コピー完了toastを表示します
+   */
   const copyToClipboard = async () => {
     await global.navigator.clipboard.writeText(account.genTwoFaCode());
     setShowCopiedMsg(true);
@@ -51,7 +50,7 @@ const AccountView: React.FC<accountProps> = ({
   return (
     <>
       <dialog
-        id="delteAccountModal"
+        ref={delConfirmModalRef}
         className="modal modal-bottom sm:modal-middle"
       >
         <div className="modal-box">
@@ -81,10 +80,7 @@ const AccountView: React.FC<accountProps> = ({
         </div>
       </dialog>
 
-      <dialog
-        ref={modalRef}
-        className="modal modal-bottom sm:modal-middle"
-      >
+      <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <h3 className="font-bold text-lg">アカウント編集</h3>
           <p className="break-words text-sm mt-2"></p>
