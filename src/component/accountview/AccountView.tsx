@@ -3,6 +3,7 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import { MdContentCopy } from "react-icons/md";
 import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
+import { useState } from "react";
 
 interface accountProps {
   account: Account;
@@ -15,6 +16,8 @@ const AccountView: React.FC<accountProps> = ({
   setAccounts,
   timeCounter,
 }) => {
+  const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
+
   const storageProvider = new StorageProvider();
 
   const showDeleteConfirmModal = () => {
@@ -29,6 +32,10 @@ const AccountView: React.FC<accountProps> = ({
 
   const copyToClipboard = async () => {
     await global.navigator.clipboard.writeText(account.genTwoFaCode());
+    setShowCopiedMsg(true);
+    setTimeout(() => {
+      setShowCopiedMsg(false);
+    }, 2000)
   };
 
   return (
@@ -82,10 +89,13 @@ const AccountView: React.FC<accountProps> = ({
             {account.genTwoFaCode()}
           </p>
           {/* copy icon */}
-          <MdContentCopy
-            className="w-4 h-4 ml-1 hover:cursor-pointer"
-            onClick={() => copyToClipboard()}
-          />
+          <div className="flex space-x-1">
+            <MdContentCopy
+              className="w-4 h-4 ml-1 hover:cursor-pointer"
+              onClick={() => copyToClipboard()}
+            />
+            {showCopiedMsg && (<p className="text-xs">コピー！</p>)}
+          </div>
 
           {/* time counter */}
           <div
