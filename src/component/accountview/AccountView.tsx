@@ -35,7 +35,7 @@ const AccountView: React.FC<accountProps> = ({
     setShowCopiedMsg(true);
     setTimeout(() => {
       setShowCopiedMsg(false);
-    }, 2000)
+    }, 2000);
   };
 
   return (
@@ -72,6 +72,14 @@ const AccountView: React.FC<accountProps> = ({
       </dialog>
 
       <div className="group bg-base-100 border p-2 rounded">
+        {showCopiedMsg && (
+          <div className="toast toast-center toast-middle z-[100]">
+            <div className="alert alert-info">
+              <span className="text-sm">クリップボードにコピーしました</span>
+            </div>
+          </div>
+        )}
+
         <div className="flex items-center">
           <p className="text-sm">{account.label}</p>
           <div className="ml-auto flex items-center">
@@ -94,7 +102,6 @@ const AccountView: React.FC<accountProps> = ({
               className="w-4 h-4 ml-1 hover:cursor-pointer"
               onClick={() => copyToClipboard()}
             />
-            {showCopiedMsg && (<p className="text-xs">コピー！</p>)}
           </div>
 
           {/* time counter */}
