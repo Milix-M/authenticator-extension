@@ -73,7 +73,7 @@ const AccountView: React.FC<accountProps> = ({
 
       <div className="group bg-base-100 border p-2 rounded">
         {showCopiedMsg && (
-          <div className="toast toast-center toast-middle z-[100]">
+          <div className="toast toast-center toast-middle z-[100] select-none">
             <div className="alert alert-info">
               <span className="text-sm">クリップボードにコピーしました</span>
             </div>
