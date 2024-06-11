@@ -5,18 +5,12 @@ import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
 
 interface accountProps {
-  label: string;
-  code: number;
-  accountUUID: string;
+  account: Account;
   setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
+  timeCounter: number;
 }
 
-const AccountView: React.FC<accountProps> = ({
-  label,
-  code,
-  accountUUID,
-  setAccounts,
-}) => {
+const AccountView: React.FC<accountProps> = ({ account, setAccounts, timeCounter }) => {
   const storageProvider = new StorageProvider();
 
   const showDeleteConfirmModal = () => {
@@ -49,7 +43,7 @@ const AccountView: React.FC<accountProps> = ({
                 className="btn btn-primary ml-2"
                 onClick={async () => {
                   await storageProvider
-                    .removeSecret(accountUUID)
+                    .removeSecret(account.accountUUID)
                     .then(async () =>
                       setAccounts(await storageProvider.getSecrets())
                     );
@@ -64,7 +58,7 @@ const AccountView: React.FC<accountProps> = ({
 
       <div className="group bg-base-100 border p-2 rounded">
         <div className="flex items-center">
-          <p className="text-sm">{label}</p>
+          <p className="text-sm">{account.label}</p>
           <div className="ml-auto flex items-center">
             <HiOutlinePencilAlt className="w-4 h-4 mr-1 hidden group-hover:block" />
             <FiTrash
@@ -76,14 +70,16 @@ const AccountView: React.FC<accountProps> = ({
           </div>
         </div>
         <div className="flex items-baseline">
-          <p className="text-4xl mt-1">{code}</p>
+          <p className="text-4xl mt-1">
+            {account.genTwoFaCode()}
+          </p>
           {/* copy icon */}
           <MdContentCopy className="w-4 h-4 ml-1" />
 
           {/* time counter */}
           <div
             className="radial-progress bg-base-300 ml-auto"
-            style={{ ["--value" as any]: 70, ["--size" as any]: "1.8em" }}
+            style={{ ["--value" as string]: timeCounter, ["--size" as string]: "1.8em" }}
             role="progressbar"
           ></div>
         </div>
