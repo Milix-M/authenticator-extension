@@ -15,6 +15,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
   // コピー完了toast管理state
   const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
   const [persentage, setParsentage] = useState<number>(0);
+  const [editedName, setEditedName] = useState<string>(account.label);
   const storageProvider = new StorageProvider();
 
   const delConfirmModalRef = useRef<HTMLDialogElement>(null);
@@ -28,6 +29,8 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
   const modalRef = useRef<HTMLDialogElement>(null);
   /** アカウント編集モーダルを表示します */
   const showAccountEditModal = () => {
+    setEditedName(account.label);
+
     if (modalRef.current !== null) {
       modalRef.current.showModal();
     }
@@ -108,12 +111,11 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
                 <span className="label-text-alt">必須</span>
               </div>
               <input
-                id="account"
                 type="text"
                 placeholder="Account Name"
                 className="input input-sm input-bordered w-full max-w-xs"
-                onChange={() => {}}
-                value={account.label}
+                onChange={(e) => {setEditedName(e.target.value)}}
+                value={editedName}
               />
             </label>
           </div>
@@ -122,7 +124,14 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button className="btn">キャンセル</button>
-              <button className="btn btn-primary ml-2" onClick={() => {}}>
+              <button className="btn btn-primary ml-2" onClick={async () => {
+                if (editedName.length >= 1) {
+                  account.label = editedName;
+                  await storageProvider.setSecret(account).then(async () => {
+                    setAccounts(await storageProvider.getSecrets());
+                  })
+                }
+              }}>
                 保存
               </button>
             </form>
