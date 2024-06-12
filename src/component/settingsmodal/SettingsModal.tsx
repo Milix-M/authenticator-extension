@@ -8,10 +8,11 @@ interface settingsModalProps {
 }
 
 const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
+  const savedTheme = localStorage.getItem("selectedTheme");
+
   const [theme, setTheme] = useState(localStorage.getItem("selectedTheme"));
 
   const saveTheme = (theme: string | null) => {
-    console.log("do");
     if (theme !== null) {
       localStorage.setItem("selectedTheme", theme);
     }
@@ -30,7 +31,10 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
               </div>
               <select
                 className="select select-bordered select-sm"
-                onChange={(e) => setTheme(e.target.value)}
+                onChange={(e) => {
+                  setTheme(e.target.value);
+                  setThemeToDaisyui(e.target.value);
+                }}
                 value={theme !== null ? theme : "light"}
               >
                 {supportedTheme.map((theme) => (
@@ -46,7 +50,8 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
               <button
                 className="btn"
                 onClick={() => {
-                  setTheme(localStorage.getItem("selectedTheme"));
+                  setTheme(savedTheme);
+                  setThemeToDaisyui(savedTheme);
                 }}
               >
                 キャンセル
@@ -55,7 +60,7 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
                 className="btn btn-primary ml-2"
                 onClick={() => {
                   saveTheme(theme);
-                  setThemeToDaisyui(localStorage.getItem("selectedTheme"));
+                  setThemeToDaisyui(theme);
                 }}
               >
                 保存
