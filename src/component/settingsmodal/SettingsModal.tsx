@@ -1,8 +1,12 @@
+// import { useState } from "react";
+
 interface settingsModalProps {
   modalRef: React.RefObject<HTMLDialogElement>;
 }
 
 const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
+  //   const [theme, setTheme] = useState("");
+
   return (
     <>
       <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
@@ -10,15 +14,15 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
           <h3 className="font-bold text-lg">Authenticatorの設定</h3>
 
           <div className="mt-1 flex justify-center">
-            <label className="form-control w-full max-w-xs ">
-              <div className="label py-1">
-                <span className="label-text">テーマ</span>
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <span className="label-text">タイプ</span>
+                <span className="label-text-alt">必須</span>
               </div>
-              <input
-                type="text"
-                placeholder="Key"
-                className="input input-sm input-bordered w-full max-w-xs"
-              />
+              <select className="select select-bordered select-sm">
+                <option value="totp">TOTP</option>
+                <option value="hotp">HOTP</option>
+              </select>
             </label>
           </div>
 
