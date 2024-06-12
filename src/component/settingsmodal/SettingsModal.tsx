@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { supportedTheme } from "../../supportedTheme";
+import { setThemeToDaisyui } from "../../theme";
 
 interface settingsModalProps {
   modalRef: React.RefObject<HTMLDialogElement>;
@@ -54,6 +55,7 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
                 className="btn btn-primary ml-2"
                 onClick={() => {
                   saveTheme(theme);
+                  setThemeToDaisyui(localStorage.getItem("selectedTheme"));
                 }}
               >
                 保存
