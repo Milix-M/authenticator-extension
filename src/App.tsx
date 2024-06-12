@@ -160,7 +160,7 @@ function App() {
           <Header />
 
           {/* main */}
-          <div className="p-2 space-y-2 flex-grow h-96 overflow-y-scroll scrollbar-thin">
+          <div className="p-2 space-y-2 flex-grow h-[26rem] overflow-y-scroll scrollbar-thin">
             {accounts?.map((account) => (
               <AccountView account={account} setAccounts={setAccounts} />
             ))}
