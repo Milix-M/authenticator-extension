@@ -1,11 +1,21 @@
-// import { useState } from "react";
+import { useState } from "react";
+
+import { supportedTheme } from "../../supportedTheme";
+import { setThemeToDaisyui } from "../../theme";
 
 interface settingsModalProps {
   modalRef: React.RefObject<HTMLDialogElement>;
 }
 
 const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
-  //   const [theme, setTheme] = useState("");
+  const [theme, setTheme] = useState(localStorage.getItem("selectedTheme"));
+
+  const saveTheme = (theme: string | null) => {
+    console.log("do");
+    if (theme !== null) {
+      localStorage.setItem("selectedTheme", theme);
+    }
+  };
 
   return (
     <>
@@ -16,12 +26,16 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
           <div className="mt-1 flex justify-center">
             <label className="form-control w-full max-w-xs">
               <div className="label">
-                <span className="label-text">タイプ</span>
-                <span className="label-text-alt">必須</span>
+                <span className="label-text">テーマ</span>
               </div>
-              <select className="select select-bordered select-sm">
-                <option value="totp">TOTP</option>
-                <option value="hotp">HOTP</option>
+              <select
+                className="select select-bordered select-sm"
+                onChange={(e) => setTheme(e.target.value)}
+                value={theme !== null ? theme : "light"}
+              >
+                {supportedTheme.map((theme) => (
+                  <option value={theme}>{theme}</option>
+                ))}
               </select>
             </label>
           </div>
@@ -29,8 +43,23 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn">キャンセル</button>
-              <button className="btn btn-primary ml-2">実行</button>
+              <button
+                className="btn"
+                onClick={() => {
+                  setTheme(localStorage.getItem("selectedTheme"));
+                }}
+              >
+                キャンセル
+              </button>
+              <button
+                className="btn btn-primary ml-2"
+                onClick={() => {
+                  saveTheme(theme);
+                  setThemeToDaisyui(localStorage.getItem("selectedTheme"));
+                }}
+              >
+                保存
+              </button>
             </form>
           </div>
         </div>

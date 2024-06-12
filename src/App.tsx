@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { StorageProvider } from "./storage";
 import { Account } from "./models/account";
 import { v4 as uuidv4 } from "uuid";
+import { setThemeToDaisyui } from "./theme";
 
 function App() {
   const [accountName, setAccountName] = useState("");
@@ -12,6 +13,8 @@ function App() {
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
 
   const storageProvider = new StorageProvider();
+
+  setThemeToDaisyui(localStorage.getItem("selectedTheme"));
 
   // アカウント取ってくる
   const [accounts, setAccounts] = useState<Account[]>();
