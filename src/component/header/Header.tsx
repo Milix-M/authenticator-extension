@@ -10,10 +10,12 @@ const Header = () => {
     if (settingsModalRef.current !== null) {
       settingsModalRef.current.showModal();
     }
-  }
+  };
 
   const showAccModal = () => {
-    const modal = document.getElementById("addAccountModal") as HTMLDialogElement;
+    const modal = document.getElementById(
+      "addAccountModal"
+    ) as HTMLDialogElement;
 
     if (modal !== null) {
       modal.showModal();
@@ -22,18 +24,24 @@ const Header = () => {
 
   return (
     <>
-      <SettingsModal modalRef={settingsModalRef}/>
+      <SettingsModal modalRef={settingsModalRef} />
 
       <div className="py-3 px-4 w-full flex items-center justify-between bg-base-100 border-b">
         <div className="flex space-x-2">
           {/* gear icon */}
-          <LuSettings className="w-5 h-5 hover:cursor-pointer" onClick={() => showSettingsModal()}/>
+          <LuSettings
+            className="w-5 h-5 hover:cursor-pointer"
+            onClick={() => showSettingsModal()}
+          />
           <div className="w-5 h-5"></div>
         </div>
         <p className="text-center text-base font-bold">Authenticator</p>
         <div className="flex space-x-2">
           {/* Add icon */}
-          <FiPlusSquare className="w-5 h-5 hover:cursor-pointer" onClick={() => showAccModal()}/>
+          <FiPlusSquare
+            className="w-5 h-5 hover:cursor-pointer"
+            onClick={() => showAccModal()}
+          />
           {/* QRCode icon */}
           <LuQrCode className="w-5 h-5 hover:cursor-pointer" />
         </div>
