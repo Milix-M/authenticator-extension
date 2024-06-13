@@ -163,7 +163,7 @@ function App() {
         </dialog>
 
         <div className="max-w-xs w-full bg-base-200 flex flex-col">
-          <Header />
+          <Header setAccounts={setAccounts} />
 
           {/* main */}
           <div className="p-2 space-y-2 flex-grow h-[26rem] overflow-y-scroll scrollbar-thin">
