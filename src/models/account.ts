@@ -6,7 +6,7 @@ export class Account {
     public secret: string,
     public type: string,
     public label: string,
-    public addedAt: Date,
+    public addedAt: number,
     public timeStep: number = 30,
     public counter?: number,
     public issuer?: string,
