@@ -1,10 +1,16 @@
-import { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { FiPlusSquare } from "react-icons/fi";
 import { LuQrCode, LuSettings } from "react-icons/lu";
 import SettingsModal from "../settingsmodal/SettingsModal";
 import { readQRtoAccount } from "../../qrcodereader";
+import { StorageProvider } from "../../storage";
+import { Account } from "../../models/account";
 
-const Header = () => {
+interface headerProps {
+  setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
+}
+
+const Header: React.FC<headerProps> = ({ setAccounts }) => {
   const settingsModalRef = useRef<HTMLDialogElement>(null);
 
   const showSettingsModal = () => {
@@ -22,6 +28,25 @@ const Header = () => {
       modal.showModal();
     }
   };
+
+  const handleQRCodeClick = useCallback(async () => {
+    try {
+      let newAccount: Account | undefined;
+
+      await readQRtoAccount().then((account) => {
+        newAccount = account;
+      });
+
+      if (newAccount) {
+        const storageProvider = new StorageProvider();
+        await storageProvider.setSecret(newAccount);
+        const values = await storageProvider.getSecrets();
+        setAccounts(values);
+      }
+    } catch (error) {
+      console.error("Failed to read QR code and set account:", error);
+    }
+  }, [setAccounts]);
 
   return (
     <>
@@ -44,9 +69,10 @@ const Header = () => {
             onClick={() => showAccModal()}
           />
           {/* QRCode icon */}
-          <LuQrCode className="w-5 h-5 hover:cursor-pointer" onClick={() => {
-            readQRtoAccount();
-          }}/>
+          <LuQrCode
+            className="w-5 h-5 hover:cursor-pointer"
+            onClick={handleQRCodeClick}
+          />
         </div>
       </div>
     </>
