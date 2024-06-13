@@ -138,7 +138,8 @@ function App() {
                         uuidv4(),
                         secret,
                         otpType,
-                        accountName
+                        accountName,
+                        new Date()
                       );
 
                       storageProvider.setSecret(newAccount).then(function () {
