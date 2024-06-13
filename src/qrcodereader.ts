@@ -5,6 +5,8 @@ import { Account } from "./models/account";
 import { v4 as uuidv4 } from "uuid";
 
 export async function readQRtoAccount() {
+  let account: Account | undefined;
+
   // タブ情報取得
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -23,7 +25,7 @@ export async function readQRtoAccount() {
         const parsed = parseURI(code.data);
 
         // Accountクラスに戻す
-        const account: Account = Object.assign(
+        account = Object.assign(
           new Account(
             uuidv4(),
             parsed.query.secret,
@@ -35,9 +37,8 @@ export async function readQRtoAccount() {
             parsed.query.issuer
           )
         );
-
-        return account;
       }
     });
   }
+  return account;
 }
