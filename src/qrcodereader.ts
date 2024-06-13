@@ -1,4 +1,4 @@
-export async function getImage() {
+export async function readQRtoAccount() {
   // タブ情報取得
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 

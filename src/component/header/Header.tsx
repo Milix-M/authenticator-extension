@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { FiPlusSquare } from "react-icons/fi";
 import { LuQrCode, LuSettings } from "react-icons/lu";
 import SettingsModal from "../settingsmodal/SettingsModal";
-import { getImage } from "../../qrcodereader";
+import { readQRtoAccount } from "../../qrcodereader";
 
 const Header = () => {
   const settingsModalRef = useRef<HTMLDialogElement>(null);
@@ -45,7 +45,7 @@ const Header = () => {
           />
           {/* QRCode icon */}
           <LuQrCode className="w-5 h-5 hover:cursor-pointer" onClick={() => {
-            getImage();
+            readQRtoAccount();
           }}/>
         </div>
       </div>
