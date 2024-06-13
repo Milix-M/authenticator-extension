@@ -47,7 +47,7 @@ export async function readQRtoAccount(): Promise<Account | undefined> {
             uuidv4(),
             parsed.query.secret,
             parsed.type,
-            parsed.label.issuer + parsed.label.account,
+            parsed.label.issuer + ": " + parsed.label.account,
             new Date().getTime(),
             parsed.query.period,
             parsed.query.counter,
