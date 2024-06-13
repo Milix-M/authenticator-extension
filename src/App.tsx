@@ -143,7 +143,8 @@ function App() {
                       );
 
                       storageProvider.setSecret(newAccount).then(function () {
-                        setAccounts([...(accounts as Account[]), newAccount]);
+                        // 新しく追加したアカウントをsetしつつ降順ソート
+                        setAccounts([...(accounts as Account[]), newAccount].sort((a, b) => b.addedAt - a.addedAt));
                         resetInputForm();
                       });
                     }

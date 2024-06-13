@@ -28,7 +28,8 @@ export class StorageProvider {
       accounts.push(this.decodeEncryptAccount(v));
     }
 
-    return accounts;
+    // 降順ソート
+    return [...accounts].sort((a, b) => b.addedAt - a.addedAt);
   }
 
   /**
