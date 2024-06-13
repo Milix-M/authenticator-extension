@@ -139,7 +139,7 @@ function App() {
                         secret,
                         otpType,
                         accountName,
-                        new Date()
+                        new Date().getTime()
                       );
 
                       storageProvider.setSecret(newAccount).then(function () {

@@ -67,7 +67,7 @@ export class StorageProvider {
 
     // Accountクラスに戻す
     const account: Account = Object.assign(
-      new Account(uuidv4(), "", "totp", "", new Date()),
+      new Account(uuidv4(), "", "totp", "", 0),
       JSON.parse(decodedAccount)
     );
 
