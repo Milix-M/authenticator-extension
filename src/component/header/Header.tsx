@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { FiPlusSquare } from "react-icons/fi";
 import { LuQrCode, LuSettings } from "react-icons/lu";
 import SettingsModal from "../settingsmodal/SettingsModal";
@@ -11,8 +11,11 @@ interface headerProps {
 }
 
 const Header: React.FC<headerProps> = ({ setAccounts }) => {
-  const settingsModalRef = useRef<HTMLDialogElement>(null);
+  // メッセージ表示toast管理state
+  const [showNotifyToast, setShowNotifyToast] = useState<boolean>(false);
+  const [toastMsg, setToastMsg] = useState<string>("");
 
+  const settingsModalRef = useRef<HTMLDialogElement>(null);
   const showSettingsModal = () => {
     if (settingsModalRef.current !== null) {
       settingsModalRef.current.showModal();
@@ -29,6 +32,15 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
     }
   };
 
+  const notifyToast = (msg: string) => {
+    setToastMsg(msg);
+    setShowNotifyToast(true);
+
+    setTimeout(() => {
+      setShowNotifyToast(false);
+    }, 3000);
+  };
+
   const handleQRCodeClick = useCallback(async () => {
     try {
       let newAccount: Account | undefined;
@@ -42,6 +54,9 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
         await storageProvider.setSecret(newAccount);
         const values = await storageProvider.getSecrets();
         setAccounts(values);
+        notifyToast("アカウントを追加しました");
+      } else {
+        notifyToast("アカウントを追加できませんでした");
       }
     } catch (error) {
       console.error("Failed to read QR code and set account:", error);
@@ -51,6 +66,14 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
   return (
     <>
       <SettingsModal modalRef={settingsModalRef} />
+
+      {showNotifyToast && (
+        <div className="toast toast-center toast-middle z-[100] select-none">
+          <div className="alert alert-success">
+            <span>{toastMsg}</span>
+          </div>
+        </div>
+      )}
 
       <div className="py-3 px-4 w-full flex items-center justify-between bg-base-100 border-b">
         <div className="flex space-x-2">
