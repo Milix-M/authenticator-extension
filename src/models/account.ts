@@ -7,6 +7,7 @@ export class Account {
     public type: string,
     public label: string,
     public timeStep: number = 30,
+    public addedAt: Date,
     public counter?: number,
     public issuer?: string,
   ) {}
