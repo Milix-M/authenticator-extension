@@ -69,7 +69,7 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
 
       {showNotifyToast && (
         <div className="toast toast-center toast-middle z-[100] select-none">
-          <div className="alert alert-success">
+          <div className="alert alert-info">
             <span>{toastMsg}</span>
           </div>
         </div>
