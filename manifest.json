@@ -4,5 +4,5 @@
   "version": "1.0.0",
   "description": "二段階認証コードを生成します。",
   "action": { "default_popup": "index.html" },
-  "permissions": ["storage", "tabs", "activeTab", "debugger"]
+  "permissions": ["storage", "tabs", "activeTab"]
 }
