@@ -14,6 +14,7 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
   // メッセージ表示toast管理state
   const [showNotifyToast, setShowNotifyToast] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<string>("");
+  const [notifyType, setNotifyType] = useState<"alert-info" | "alert-warning">("alert-info");
 
   const settingsModalRef = useRef<HTMLDialogElement>(null);
   const showSettingsModal = () => {
@@ -32,8 +33,15 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
     }
   };
 
-  const notifyToast = (msg: string) => {
+  const notifyToast = (msg: string, type: "info" | "warning") => {
     setToastMsg(msg);
+
+    if (type === "info") {
+      setNotifyType("alert-info");
+    } else if (type === "warning") {
+      setNotifyType("alert-warning");
+    }
+
     setShowNotifyToast(true);
 
     setTimeout(() => {
@@ -54,9 +62,9 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
         await storageProvider.setSecret(newAccount);
         const values = await storageProvider.getSecrets();
         setAccounts(values);
-        notifyToast("アカウントを追加しました");
+        notifyToast("アカウントを追加しました", "info");
       } else {
-        notifyToast("アカウントを追加できませんでした");
+        notifyToast("アカウントを追加できませんでした", "warning");
       }
     } catch (error) {
       console.error("Failed to read QR code and set account:", error);
@@ -69,8 +77,8 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
 
       {showNotifyToast && (
         <div className="toast toast-center toast-middle z-[100] select-none">
-          <div className="alert alert-info">
-            <span>{toastMsg}</span>
+          <div className={`alert ${notifyType}`}>
+            <span className="text-sm">{toastMsg}</span>
           </div>
         </div>
       )}
