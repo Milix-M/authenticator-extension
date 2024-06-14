@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { FiPlusSquare } from "react-icons/fi";
-import { LuQrCode, LuSettings } from "react-icons/lu";
+import { LuPencil, LuQrCode, LuSettings } from "react-icons/lu";
 import SettingsModal from "../settingsmodal/SettingsModal";
 import { readQRtoAccount } from "../../qrcodereader";
 import { StorageProvider } from "../../storage";
@@ -92,7 +92,10 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
             className="w-5 h-5 hover:cursor-pointer"
             onClick={() => showSettingsModal()}
           />
-          <div className="w-5 h-5"></div>
+          <LuPencil
+            onClick={() => {}}
+            className="w-5 h-5 hover:cursor-pointer"
+          />
         </div>
         <p className="text-center text-base font-bold">Authenticator</p>
         <div className="flex space-x-2">
