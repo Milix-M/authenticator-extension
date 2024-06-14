@@ -14,7 +14,9 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
   // メッセージ表示toast管理state
   const [showNotifyToast, setShowNotifyToast] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<string>("");
-  const [notifyType, setNotifyType] = useState<"alert-info" | "alert-warning">("alert-info");
+  const [notifyType, setNotifyType] = useState<"alert-info" | "alert-warning">(
+    "alert-info"
+  );
 
   const settingsModalRef = useRef<HTMLDialogElement>(null);
   const showSettingsModal = () => {
