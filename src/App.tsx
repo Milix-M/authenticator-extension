@@ -5,6 +5,7 @@ import { StorageProvider } from "./storage";
 import { Account } from "./models/account";
 import { v4 as uuidv4 } from "uuid";
 import { setThemeToDaisyui } from "./theme";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 function App() {
   const [accountName, setAccountName] = useState("");
@@ -167,9 +168,37 @@ function App() {
 
           {/* main */}
           <div className="p-2 space-y-2 flex-grow h-[26rem] overflow-y-scroll scrollbar-thin">
-            {accounts?.map((account) => (
+            <DragDropContext onDragEnd={() => {}}>
+              <Droppable droppableId="droppable1">
+                {(provided) => (
+                  <div {...provided.droppableProps} ref={provided.innerRef}>
+                    {accounts?.map((account, index) => (
+                      <Draggable
+                        draggableId={account.accountUUID}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <AccountView
+                              account={account}
+                              setAccounts={setAccounts}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+
+            {/* {accounts?.map((account) => (
               <AccountView account={account} setAccounts={setAccounts} />
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
