@@ -8,7 +8,7 @@ export class Account {
     public label: string,
     public addedAt: number,
     public timeStep: number = 30,
-    public counter: number = 1,
+    public counter: number = 0,
     public issuer?: string
   ) {}
 
@@ -27,9 +27,8 @@ export class Account {
       const hotp = new Totp(6, this.timeStep);
       const key = hotp.decodeB32Code(this.secret);
 
-      code = hotp.hotp(key, this.counter as any);
-
       this.counter++;
+      code = hotp.hotp(key, this.counter as any);
     }
 
     return code;
