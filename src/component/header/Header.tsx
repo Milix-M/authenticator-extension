@@ -5,6 +5,7 @@ import SettingsModal from "../settingsmodal/SettingsModal";
 import { readQRtoAccount } from "../../qrcodereader";
 import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
+import Toast from "../toast/Toast";
 
 interface headerProps {
   setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
@@ -77,13 +78,7 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
     <>
       <SettingsModal modalRef={settingsModalRef} />
 
-      {showNotifyToast && (
-        <div className="toast toast-center toast-middle z-[100] select-none">
-          <div className={`alert ${notifyType}`}>
-            <span className="text-sm">{toastMsg}</span>
-          </div>
-        </div>
-      )}
+      {showNotifyToast && <Toast toastText={toastMsg} toastType={notifyType} />}
 
       <div className="py-3 px-4 w-full flex items-center justify-between bg-base-100 border-b">
         <div className="flex space-x-2">
