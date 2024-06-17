@@ -48,9 +48,34 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
           <div className="mt-1 flex justify-center">
             <label className="form-control w-full max-w-xs">
               <div className="label">
-                <span className="label-text">アカウント引き継ぎ</span>
+                <span className="label-text">アカウント書き出し</span>
               </div>
-              <button className="btn btn-sm btn-primary" onClick={() => exportAccounts()}>エクスポート</button>
+              <div>
+                <button
+                  className="btn btn-sm btn-primary w-full"
+                  onClick={() => exportAccounts()}
+                >
+                  エクスポート
+                </button>
+              </div>
+            </label>
+          </div>
+
+          <div className="mt-1 flex justify-center">
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <span className="label-text">アカウント読み込み</span>
+              </div>
+              <div>
+                <input
+                  type="file"
+                  accept=".json"
+                  className="file-input file-input-bordered file-input-sm w-full"
+                />
+                <button className="btn btn-sm btn-primary w-full mt-1">
+                  読み込み実行
+                </button>
+              </div>
             </label>
           </div>
 
