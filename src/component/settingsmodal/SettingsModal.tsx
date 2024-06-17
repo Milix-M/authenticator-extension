@@ -46,37 +46,30 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
           </div>
 
           <div className="mt-1 flex justify-center">
-            <label className="form-control w-full max-w-xs">
+            <div className="w-full max-w-xs">
               <div className="label">
-                <span className="label-text">アカウント書き出し</span>
+                <span className="label-text">アカウント引き継ぎ</span>
               </div>
-              <div>
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   className="btn btn-sm btn-primary w-full"
                   onClick={() => exportAccounts()}
                 >
                   エクスポート
                 </button>
-              </div>
-            </label>
-          </div>
-
-          <div className="mt-1 flex justify-center">
-            <label className="form-control w-full max-w-xs">
-              <div className="label">
-                <span className="label-text">アカウント読み込み</span>
-              </div>
-              <div>
-                <input
-                  type="file"
-                  accept=".json"
-                  className="file-input file-input-bordered file-input-sm w-full"
-                />
-                <button className="btn btn-sm btn-primary w-full mt-1">
-                  読み込み実行
+                <button
+                  className="btn btn-sm btn-primary w-full"
+                  onClick={() => {
+                    const filePickInput = document.createElement("input");
+                    filePickInput.type = "file";
+                    filePickInput.accept = ".json";
+                    filePickInput.click();
+                  }}
+                >
+                  インポート
                 </button>
               </div>
-            </label>
+            </div>
           </div>
 
           <div className="modal-action">
