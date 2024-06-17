@@ -202,6 +202,10 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
                 if (!isHotpCooldown) {
                   setHotpCode(account.genTwoFaCode());
 
+                  storageProvider.setSecret(account).then(async () => {
+                    setAccounts(await storageProvider.getSecrets())
+                  })
+
                   //連続で押せなくする
                   setIsHotpCooldown(true);
                   setTimeout(() => {
