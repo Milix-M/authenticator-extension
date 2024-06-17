@@ -1,6 +1,6 @@
 interface toastProps {
   toastText: string;
-  toastType: string;
+  toastType: "alert-info" | "alert-warning";
 }
 
 const Toast: React.FC<toastProps> = ({ toastText, toastType }) => {
