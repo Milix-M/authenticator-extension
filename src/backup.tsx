@@ -9,7 +9,11 @@ export const exportAccounts = () => {
     const blob = new Blob([JSON.stringify(values)], { type: "text/json" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "exportedAccount.txt";
+    link.download = "exportedAccount.json";
     link.click();
   });
 };
+
+export const importAccounts = () => {
+
+}
