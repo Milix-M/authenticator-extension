@@ -8,8 +8,8 @@ export class Account {
     public label: string,
     public addedAt: number,
     public timeStep: number = 30,
-    public counter?: number,
-    public issuer?: string,
+    public counter: number = 1,
+    public issuer?: string
   ) {}
 
   /**
@@ -27,15 +27,9 @@ export class Account {
       const hotp = new Totp(6, this.timeStep);
       const key = hotp.decodeB32Code(this.secret);
 
-      // counterが入ってなければデフォルトで0いれる
-      let generatorCounter = 0;
+      code = hotp.hotp(key, this.counter as any);
 
-      // 入ってればfgeneratorCounterにいれる
-      if (this.counter !== undefined) {
-        generatorCounter = this.counter;
-      }
-
-      code = hotp.hotp(key, generatorCounter);
+      this.counter++;
     }
 
     return code;
