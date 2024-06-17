@@ -1,14 +1,14 @@
 interface toastProps {
-  modalText: string;
-  modalType: string;
+  toastText: string;
+  toastType: string;
 }
 
-const Toast: React.FC<toastProps> = ({ modalText, modalType }) => {
+const Toast: React.FC<toastProps> = ({ toastText, toastType }) => {
   return (
     <>
       <div className="toast toast-center toast-middle z-[100] select-none">
-        <div className={`alert alert-${modalType}`}>
-          <span className="text-sm">{modalText}</span>
+        <div className={`alert alert-${toastType}`}>
+          <span className="text-sm">{toastText}</span>
         </div>
       </div>
     </>
