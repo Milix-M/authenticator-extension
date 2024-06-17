@@ -203,7 +203,9 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
             <div className="ml-auto flex items-center">
               <span className="text-xs">{account.counter}</span>
               <TbReload
-                className={`w-[1.8em] h-[1.8em] hover:cursor-pointer ${isHotpCooldown ? "text-base-300" : ""}`}
+                className={`w-[1.8em] h-[1.8em] hover:cursor-pointer ${
+                  isHotpCooldown ? "text-base-300" : ""
+                }`}
                 onClick={async () => {
                   if (!isHotpCooldown) {
                     setHotpCode(account.genTwoFaCode());
