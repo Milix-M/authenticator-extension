@@ -6,6 +6,7 @@ import { Account } from "../../models/account";
 import { useRef, useState } from "react";
 import useInterval from "use-interval";
 import { TbReload } from "react-icons/tb";
+import Toast from "../toast/Toast";
 
 interface accountProps {
   account: Account;
@@ -164,11 +165,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
 
       <div className="group bg-base-100 border p-2 rounded">
         {showCopiedMsg && (
-          <div className="toast toast-center toast-middle z-[100] select-none">
-            <div className="alert alert-info">
-              <span className="text-sm">クリップボードにコピーしました</span>
-            </div>
-          </div>
+          <Toast modalText="クリップボードにコピーしました" modalType="info" />
         )}
 
         <div className="flex items-center">
