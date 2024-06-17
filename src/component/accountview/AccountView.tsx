@@ -165,7 +165,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
 
       <div className="group bg-base-100 border p-2 rounded">
         {showCopiedMsg && (
-          <Toast modalText="クリップボードにコピーしました" modalType="info" />
+          <Toast toastText="クリップボードにコピーしました" toastType="alert-info" />
         )}
 
         <div className="flex items-center">
