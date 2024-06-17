@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { supportedTheme } from "../../supportedTheme";
 import { setThemeToDaisyui } from "../../theme";
+import { exportAccounts } from "../../backup";
 
 interface settingsModalProps {
   modalRef: React.RefObject<HTMLDialogElement>;
@@ -41,6 +42,15 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
                   <option value={theme}>{theme}</option>
                 ))}
               </select>
+            </label>
+          </div>
+
+          <div className="mt-1 flex justify-center">
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <span className="label-text">アカウント引き継ぎ</span>
+              </div>
+              <button className="btn btn-sm btn-primary" onClick={() => exportAccounts()}>エクスポート</button>
             </label>
           </div>
 
