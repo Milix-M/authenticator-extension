@@ -15,9 +15,16 @@ interface accountProps {
 const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
   // コピー完了toast管理state
   const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
-  const [persentage, setParsentage] = useState<number>(0);
+  // 残り秒数保持
+  const [persentage, setParsentage] = useState<number>(counterPercentage());
   const [editedName, setEditedName] = useState<string>(account.label);
+  // HTOPのコード
   const [hotpCode, setHotpCode] = useState<string>("******");
+  // TOTPのコード
+  const [totpCode, setTotpCode] = useState<string>(
+    account.type === "totp" ? account.genTwoFaCode() : "******"
+  );
+  // HOTP連続生成を防止 管理state
   const [isHotpCooldown, setIsHotpCooldown] = useState<boolean>(false);
   const storageProvider = new StorageProvider();
 
@@ -44,7 +51,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
    */
   const copyToClipboard = async () => {
     if (account.type === "totp") {
-      await global.navigator.clipboard.writeText(account.genTwoFaCode());
+      await global.navigator.clipboard.writeText(totpCode);
     } else if (account.type === "hotp") {
       await global.navigator.clipboard.writeText(hotpCode);
     }
@@ -58,7 +65,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
    * 残り秒数カウンターのパーセンテージを計算して表示します
    * @returns コード更新までのパーセント
    */
-  const counterPercentage = () => {
+  function counterPercentage() {
     const now = Math.floor(Date.now() / 1000);
     const remainingSeconds = account.timeStep - (now % account.timeStep);
 
@@ -66,11 +73,15 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
     const percentage = Math.floor((remainingSeconds / account.timeStep) * 100);
 
     return percentage;
-  };
+  }
 
   /** 1000ms事に秒数更新 */
   useInterval(() => {
     setParsentage(counterPercentage());
+    // TOTPだったら一秒ごとに更新
+    if (account.type === "totp") {
+      setTotpCode(account.genTwoFaCode());
+    }
   }, 1000);
 
   return (
@@ -179,7 +190,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
         </div>
         <div className="flex items-baseline">
           <p className="text-4xl mt-1 tracking-wider">
-            {account.type === "totp" ? account.genTwoFaCode() : hotpCode}
+            {account.type === "totp" ? totpCode : hotpCode}
           </p>
           {/* copy icon */}
           <div className="flex space-x-1">
