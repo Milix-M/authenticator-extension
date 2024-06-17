@@ -18,6 +18,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
   const [persentage, setParsentage] = useState<number>(0);
   const [editedName, setEditedName] = useState<string>(account.label);
   const [hotpCode, setHotpCode] = useState<string>("******");
+  const [isHotpCooldown, setIsHotpCooldown] = useState<boolean>(false);
   const storageProvider = new StorageProvider();
 
   const delConfirmModalRef = useRef<HTMLDialogElement>(null);
@@ -197,7 +198,17 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
           ) : (
             <TbReload
               className="w-[1.8em] h-[1.8em] ml-auto hover:cursor-pointer"
-              onClick={() => setHotpCode(account.genTwoFaCode())}
+              onClick={async () => {
+                if (!isHotpCooldown) {
+                  setHotpCode(account.genTwoFaCode());
+
+                  //連続で押せなくする
+                  setIsHotpCooldown(true);
+                  setTimeout(() => {
+                    setIsHotpCooldown(false);
+                  }, 5000);
+                }
+              }}
             />
           )}
         </div>
