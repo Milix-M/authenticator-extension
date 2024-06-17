@@ -43,7 +43,11 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
    * クリップボードに二段階認証をコピーして、コピー完了toastを表示します
    */
   const copyToClipboard = async () => {
-    await global.navigator.clipboard.writeText(account.genTwoFaCode());
+    if (account.type === "totp") {
+      await global.navigator.clipboard.writeText(account.genTwoFaCode());
+    } else if (account.type === "hotp") {
+      await global.navigator.clipboard.writeText(hotpCode);
+    }
     setShowCopiedMsg(true);
     setTimeout(() => {
       setShowCopiedMsg(false);
@@ -196,24 +200,25 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
               role="progressbar"
             ></div>
           ) : (
-            <TbReload
-              className="w-[1.8em] h-[1.8em] ml-auto hover:cursor-pointer"
-              onClick={async () => {
-                if (!isHotpCooldown) {
-                  setHotpCode(account.genTwoFaCode());
-
-                  storageProvider.setSecret(account).then(async () => {
-                    setAccounts(await storageProvider.getSecrets());
-                  });
-
-                  //連続で押せなくする
-                  setIsHotpCooldown(true);
-                  setTimeout(() => {
-                    setIsHotpCooldown(false);
-                  }, 5000);
-                }
-              }}
-            />
+            <div className="ml-auto flex items-center">
+              <span className="text-xs">{account.counter}</span>
+              <TbReload
+                className="w-[1.8em] h-[1.8em] hover:cursor-pointer"
+                onClick={async () => {
+                  if (!isHotpCooldown) {
+                    setHotpCode(account.genTwoFaCode());
+                    storageProvider.setSecret(account).then(async () => {
+                      setAccounts(await storageProvider.getSecrets());
+                    });
+                    //連続で押せなくする
+                    setIsHotpCooldown(true);
+                    setTimeout(() => {
+                      setIsHotpCooldown(false);
+                    }, 5000);
+                  }
+                }}
+              />
+            </div>
           )}
         </div>
       </div>
