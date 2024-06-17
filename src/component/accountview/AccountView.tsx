@@ -5,6 +5,7 @@ import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
 import { useRef, useState } from "react";
 import useInterval from "use-interval";
+import { TbReload } from "react-icons/tb";
 
 interface accountProps {
   account: Account;
@@ -16,6 +17,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
   const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
   const [persentage, setParsentage] = useState<number>(0);
   const [editedName, setEditedName] = useState<string>(account.label);
+  const [hotpCode, setHotpCode] = useState<string>("******");
   const storageProvider = new StorageProvider();
 
   const delConfirmModalRef = useRef<HTMLDialogElement>(null);
@@ -114,7 +116,9 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
                 type="text"
                 placeholder="Account Name"
                 className="input input-sm input-bordered w-full max-w-xs"
-                onChange={(e) => {setEditedName(e.target.value)}}
+                onChange={(e) => {
+                  setEditedName(e.target.value);
+                }}
                 value={editedName}
               />
             </label>
@@ -124,14 +128,17 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button className="btn">キャンセル</button>
-              <button className="btn btn-primary ml-2" onClick={async () => {
-                if (editedName.length >= 1) {
-                  account.label = editedName;
-                  await storageProvider.setSecret(account).then(async () => {
-                    setAccounts(await storageProvider.getSecrets());
-                  })
-                }
-              }}>
+              <button
+                className="btn btn-primary ml-2"
+                onClick={async () => {
+                  if (editedName.length >= 1) {
+                    account.label = editedName;
+                    await storageProvider.setSecret(account).then(async () => {
+                      setAccounts(await storageProvider.getSecrets());
+                    });
+                  }
+                }}
+              >
                 保存
               </button>
             </form>
@@ -167,7 +174,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
         </div>
         <div className="flex items-baseline">
           <p className="text-4xl mt-1 tracking-wider">
-            {account.genTwoFaCode()}
+            {account.type === "totp" ? account.genTwoFaCode() : hotpCode}
           </p>
           {/* copy icon */}
           <div className="flex space-x-1">
@@ -178,14 +185,21 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
           </div>
 
           {/* time counter */}
-          <div
-            className="radial-progress bg-base-300 ml-auto"
-            style={{
-              ["--value" as string]: persentage,
-              ["--size" as string]: "1.8em",
-            }}
-            role="progressbar"
-          ></div>
+          {account.type === "totp" ? (
+            <div
+              className="radial-progress bg-base-300 ml-auto"
+              style={{
+                ["--value" as string]: persentage,
+                ["--size" as string]: "1.8em",
+              }}
+              role="progressbar"
+            ></div>
+          ) : (
+            <TbReload
+              className="w-[1.8em] h-[1.8em] ml-auto hover:cursor-pointer"
+              onClick={() => setHotpCode(account.genTwoFaCode())}
+            />
+          )}
         </div>
       </div>
     </>
