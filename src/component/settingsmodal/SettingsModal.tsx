@@ -11,6 +11,8 @@ interface settingsModalProps {
 const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
   const savedTheme = localStorage.getItem("selectedTheme");
   const [theme, setTheme] = useState(localStorage.getItem("selectedTheme"));
+  const [importSuccessNotify, setImportSuccessNotify] = useState(false);
+  const [importErrorNotify, setImportErrorNotify] = useState(false);
 
   const saveTheme = (theme: string | null) => {
     if (theme !== null) {
@@ -21,7 +23,15 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget?.files && e.currentTarget.files[0]) {
       const targetFile = e.currentTarget.files[0];
-      importAccounts(targetFile);
+      importAccounts(targetFile)
+        .then(() => {
+          setImportErrorNotify(false);
+          setImportSuccessNotify(true);
+        })
+        .catch(() => {
+          setImportSuccessNotify(false);
+          setImportErrorNotify(true);
+        });
     }
   };
 
@@ -78,6 +88,16 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
                   インポート
                 </button>
               </div>
+              {importErrorNotify && (
+                <p className="mt-1 text-center font-bold text-error">
+                  インポートに失敗しました
+                </p>
+              )}
+              {importSuccessNotify && (
+                <p className="mt-1 text-center font-bold text-success">
+                  インポートに成功しました
+                </p>
+              )}
             </div>
           </div>
 
@@ -89,6 +109,8 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
                 onClick={() => {
                   setTheme(savedTheme);
                   setThemeToDaisyui(savedTheme);
+                  setImportErrorNotify(false);
+                  setImportSuccessNotify(false);
                 }}
               >
                 キャンセル
@@ -98,6 +120,8 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
                 onClick={() => {
                   saveTheme(theme);
                   setThemeToDaisyui(theme);
+                  setImportErrorNotify(false);
+                  setImportSuccessNotify(false);
                 }}
               >
                 保存
