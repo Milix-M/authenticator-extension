@@ -3,12 +3,18 @@ import { useState } from "react";
 import { supportedTheme } from "../../supportedTheme";
 import { setThemeToDaisyui } from "../../theme";
 import { exportAccounts, importAccounts } from "../../backup";
+import { Account } from "../../models/account";
+import { StorageProvider } from "../../storage";
 
 interface settingsModalProps {
   modalRef: React.RefObject<HTMLDialogElement>;
+  setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
 }
 
-const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
+const SettingsModal: React.FC<settingsModalProps> = ({
+  modalRef,
+  setAccounts,
+}) => {
   const savedTheme = localStorage.getItem("selectedTheme");
   const [theme, setTheme] = useState(localStorage.getItem("selectedTheme"));
   const [importSuccessNotify, setImportSuccessNotify] = useState(false);
@@ -24,9 +30,14 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
     if (e.currentTarget?.files && e.currentTarget.files[0]) {
       const targetFile = e.currentTarget.files[0];
       importAccounts(targetFile)
-        .then(() => {
+        .then(async () => {
           setImportErrorNotify(false);
           setImportSuccessNotify(true);
+
+          const storageProvider = new StorageProvider();
+          await storageProvider.getSecrets().then((values) => {
+            setAccounts(values);
+          });
         })
         .catch(() => {
           setImportSuccessNotify(false);
