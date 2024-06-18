@@ -16,18 +16,33 @@ export const exportAccounts = () => {
   });
 };
 
-export const importAccounts = (e: File) => {
+/**
+ * 引数に渡されたFileオブジェクトからアカウントをstorageに格納します
+ * @param e アカウント情報が格納されたFile型 オブジェクト.
+ * @returns Promise
+ */
+export const importAccounts = async (e: File): Promise<void> => {
   const reader = new FileReader();
-  const storageProvider = new StorageProvider();
 
-  reader.onloadend = async () => {
-    const parsedJson = JSON.parse(reader.result as string);
-    for (const [_, v] of Object.entries(parsedJson)) {
-      await storageProvider.setSecret(
-        Object.assign(new Account(uuidv4(), "", "totp", "", 0), v)
-      );
-    }
-  };
+  return new Promise((resolve, reject) => {
+    reader.onloadend = async () => {
+      try {
+        const parsedJson = JSON.parse(reader.result as string);
+        const storageProvider = new StorageProvider();
 
-  reader.readAsText(e);
+        for (const [_, v] of Object.entries(parsedJson)) {
+          await storageProvider.setSecret(
+            Object.assign(new Account(uuidv4(), "", "totp", "", 0), v)
+          );
+        }
+
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    reader.onerror = reject; // ファイル読み込みエラーを処理
+    reader.readAsText(e);
+  });
 };
