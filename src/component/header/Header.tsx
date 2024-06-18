@@ -5,6 +5,7 @@ import SettingsModal from "../settingsmodal/SettingsModal";
 import { readQRtoAccount } from "../../qrcodereader";
 import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
+import Toast from "../toast/Toast";
 
 interface headerProps {
   setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
@@ -14,6 +15,9 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
   // メッセージ表示toast管理state
   const [showNotifyToast, setShowNotifyToast] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<string>("");
+  const [notifyType, setNotifyType] = useState<"alert-info" | "alert-warning">(
+    "alert-info"
+  );
 
   const settingsModalRef = useRef<HTMLDialogElement>(null);
   const showSettingsModal = () => {
@@ -32,8 +36,15 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
     }
   };
 
-  const notifyToast = (msg: string) => {
+  const notifyToast = (msg: string, type: "info" | "warning") => {
     setToastMsg(msg);
+
+    if (type === "info") {
+      setNotifyType("alert-info");
+    } else if (type === "warning") {
+      setNotifyType("alert-warning");
+    }
+
     setShowNotifyToast(true);
 
     setTimeout(() => {
@@ -54,9 +65,9 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
         await storageProvider.setSecret(newAccount);
         const values = await storageProvider.getSecrets();
         setAccounts(values);
-        notifyToast("アカウントを追加しました");
+        notifyToast("アカウントを追加しました", "info");
       } else {
-        notifyToast("アカウントを追加できませんでした");
+        notifyToast("アカウントを追加できませんでした", "warning");
       }
     } catch (error) {
       console.error("Failed to read QR code and set account:", error);
@@ -65,15 +76,9 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
 
   return (
     <>
-      <SettingsModal modalRef={settingsModalRef} />
+      <SettingsModal modalRef={settingsModalRef} setAccounts={setAccounts} />
 
-      {showNotifyToast && (
-        <div className="toast toast-center toast-middle z-[100] select-none">
-          <div className="alert alert-info">
-            <span>{toastMsg}</span>
-          </div>
-        </div>
-      )}
+      {showNotifyToast && <Toast toastText={toastMsg} toastType={notifyType} />}
 
       <div className="py-3 px-4 w-full flex items-center justify-between bg-base-100 border-b">
         <div className="flex space-x-2">

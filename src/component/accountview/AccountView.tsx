@@ -5,6 +5,8 @@ import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
 import { useRef, useState } from "react";
 import useInterval from "use-interval";
+import { TbReload } from "react-icons/tb";
+import Toast from "../toast/Toast";
 
 interface accountProps {
   account: Account;
@@ -14,8 +16,17 @@ interface accountProps {
 const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
   // コピー完了toast管理state
   const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
-  const [persentage, setParsentage] = useState<number>(0);
+  // 残り秒数保持
+  const [persentage, setParsentage] = useState<number>(counterPercentage());
   const [editedName, setEditedName] = useState<string>(account.label);
+  // HTOPのコード
+  const [hotpCode, setHotpCode] = useState<string>("******");
+  // TOTPのコード
+  const [totpCode, setTotpCode] = useState<string>(
+    account.type === "totp" ? account.genTwoFaCode() : "******"
+  );
+  // HOTP連続生成を防止 管理state
+  const [isHotpCooldown, setIsHotpCooldown] = useState<boolean>(false);
   const storageProvider = new StorageProvider();
 
   const delConfirmModalRef = useRef<HTMLDialogElement>(null);
@@ -40,7 +51,11 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
    * クリップボードに二段階認証をコピーして、コピー完了toastを表示します
    */
   const copyToClipboard = async () => {
-    await global.navigator.clipboard.writeText(account.genTwoFaCode());
+    if (account.type === "totp") {
+      await global.navigator.clipboard.writeText(totpCode);
+    } else if (account.type === "hotp") {
+      await global.navigator.clipboard.writeText(hotpCode);
+    }
     setShowCopiedMsg(true);
     setTimeout(() => {
       setShowCopiedMsg(false);
@@ -51,7 +66,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
    * 残り秒数カウンターのパーセンテージを計算して表示します
    * @returns コード更新までのパーセント
    */
-  const counterPercentage = () => {
+  function counterPercentage() {
     const now = Math.floor(Date.now() / 1000);
     const remainingSeconds = account.timeStep - (now % account.timeStep);
 
@@ -59,11 +74,15 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
     const percentage = Math.floor((remainingSeconds / account.timeStep) * 100);
 
     return percentage;
-  };
+  }
 
   /** 1000ms事に秒数更新 */
   useInterval(() => {
     setParsentage(counterPercentage());
+    // TOTPだったら一秒ごとに更新
+    if (account.type === "totp") {
+      setTotpCode(account.genTwoFaCode());
+    }
   }, 1000);
 
   return (
@@ -114,7 +133,9 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
                 type="text"
                 placeholder="Account Name"
                 className="input input-sm input-bordered w-full max-w-xs"
-                onChange={(e) => {setEditedName(e.target.value)}}
+                onChange={(e) => {
+                  setEditedName(e.target.value);
+                }}
                 value={editedName}
               />
             </label>
@@ -124,14 +145,17 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button className="btn">キャンセル</button>
-              <button className="btn btn-primary ml-2" onClick={async () => {
-                if (editedName.length >= 1) {
-                  account.label = editedName;
-                  await storageProvider.setSecret(account).then(async () => {
-                    setAccounts(await storageProvider.getSecrets());
-                  })
-                }
-              }}>
+              <button
+                className="btn btn-primary ml-2"
+                onClick={async () => {
+                  if (editedName.length >= 1) {
+                    account.label = editedName;
+                    await storageProvider.setSecret(account).then(async () => {
+                      setAccounts(await storageProvider.getSecrets());
+                    });
+                  }
+                }}
+              >
                 保存
               </button>
             </form>
@@ -141,11 +165,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
 
       <div className="group bg-base-100 border p-2 rounded">
         {showCopiedMsg && (
-          <div className="toast toast-center toast-middle z-[100] select-none">
-            <div className="alert alert-info">
-              <span className="text-sm">クリップボードにコピーしました</span>
-            </div>
-          </div>
+          <Toast toastText="クリップボードにコピーしました" toastType="alert-info" />
         )}
 
         <div className="flex items-center">
@@ -167,7 +187,7 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
         </div>
         <div className="flex items-baseline">
           <p className="text-4xl mt-1 tracking-wider">
-            {account.genTwoFaCode()}
+            {account.type === "totp" ? totpCode : hotpCode}
           </p>
           {/* copy icon */}
           <div className="flex space-x-1">
@@ -178,14 +198,38 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
           </div>
 
           {/* time counter */}
-          <div
-            className="radial-progress bg-base-300 ml-auto"
-            style={{
-              ["--value" as string]: persentage,
-              ["--size" as string]: "1.8em",
-            }}
-            role="progressbar"
-          ></div>
+          {account.type === "totp" ? (
+            <div
+              className="radial-progress bg-base-300 ml-auto"
+              style={{
+                ["--value" as string]: persentage,
+                ["--size" as string]: "1.8em",
+              }}
+              role="progressbar"
+            ></div>
+          ) : (
+            <div className="ml-auto flex items-center">
+              <span className="text-xs">{account.counter}</span>
+              <TbReload
+                className={`w-[1.8em] h-[1.8em] hover:cursor-pointer ${
+                  isHotpCooldown ? "text-base-300" : ""
+                }`}
+                onClick={async () => {
+                  if (!isHotpCooldown) {
+                    setHotpCode(account.genTwoFaCode());
+                    storageProvider.setSecret(account).then(async () => {
+                      setAccounts(await storageProvider.getSecrets());
+                    });
+                    //連続で押せなくする
+                    setIsHotpCooldown(true);
+                    setTimeout(() => {
+                      setIsHotpCooldown(false);
+                    }, 5000);
+                  }
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>
