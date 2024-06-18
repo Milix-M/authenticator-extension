@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { supportedTheme } from "../../supportedTheme";
 import { setThemeToDaisyui } from "../../theme";
-import { exportAccounts } from "../../backup";
+import { exportAccounts, importAccounts } from "../../backup";
 
 interface settingsModalProps {
   modalRef: React.RefObject<HTMLDialogElement>;
@@ -10,12 +10,18 @@ interface settingsModalProps {
 
 const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
   const savedTheme = localStorage.getItem("selectedTheme");
-
   const [theme, setTheme] = useState(localStorage.getItem("selectedTheme"));
 
   const saveTheme = (theme: string | null) => {
     if (theme !== null) {
       localStorage.setItem("selectedTheme", theme);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget?.files && e.currentTarget.files[0]) {
+      const targetFile = e.currentTarget.files[0];
+      importAccounts(targetFile);
     }
   };
 
@@ -63,6 +69,9 @@ const SettingsModal: React.FC<settingsModalProps> = ({ modalRef }) => {
                     const filePickInput = document.createElement("input");
                     filePickInput.type = "file";
                     filePickInput.accept = ".json";
+                    filePickInput.addEventListener("change", (e) =>
+                      handleFileChange(e as any)
+                    );
                     filePickInput.click();
                   }}
                 >
