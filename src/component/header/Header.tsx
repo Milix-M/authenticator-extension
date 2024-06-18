@@ -76,7 +76,7 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
 
   return (
     <>
-      <SettingsModal modalRef={settingsModalRef} />
+      <SettingsModal modalRef={settingsModalRef} setAccounts={setAccounts} />
 
       {showNotifyToast && <Toast toastText={toastMsg} toastType={notifyType} />}
 
