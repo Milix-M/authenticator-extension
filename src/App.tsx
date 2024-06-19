@@ -25,7 +25,6 @@ function App() {
     };
 
     getAccounts();
-    console.log("実行");
   }, []);
 
   useEffect(() => {
