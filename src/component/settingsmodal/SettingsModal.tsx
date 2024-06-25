@@ -63,8 +63,9 @@ const SettingsModal: React.FC<settingsModalProps> = ({
                   setTheme(e.target.value);
                   setThemeToDaisyui(e.target.value);
                 }}
-                value={theme !== null ? theme : "light"}
+                value={theme !== null ? theme : "システム設定"}
               >
+                <option value={"syncSystem"}>システム設定</option>
                 {supportedTheme.map((theme) => (
                   <option value={theme}>{theme}</option>
                 ))}
