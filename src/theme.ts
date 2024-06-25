@@ -6,22 +6,10 @@ export const setThemeToDaisyui = (theme: string | null) => {
 
   // htmlタグにテーマ設定
   if (htmltag !== null) {
-    if (theme === "syncSystem" || theme === null) {
-      htmltag.setAttribute("data-theme", getSystemTheme());
-    } else if (theme !== null) {
+    if (theme !== null) {
       htmltag.setAttribute("data-theme", theme);
+    } else {
+      htmltag.setAttribute("data-theme", "light");
     }
-  }
-};
-
-/**
- * システムに設定されているテーマを検出し返却します
- * @returns システム設定のテーマ
- */
-export const getSystemTheme = (): string => {
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    return "dark";
-  } else {
-    return "light";
   }
 };
