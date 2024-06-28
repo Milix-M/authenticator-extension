@@ -13,9 +13,14 @@ export class StorageProvider {
   public async setSecret(account: Account) {
     const encryptedAccount = this.genSavingEncryptString(account);
 
-    await this.bucket.set({
-      [account.accountUUID]: encryptedAccount,
-    });
+    await this.bucket
+      .set({
+        [account.accountUUID]: encryptedAccount,
+      })
+      .then(() => {
+        // コンテキストメニューに追加
+        chrome.runtime.sendMessage({ addAccount: account });
+      });
   }
 
   public async getSecrets() {
@@ -39,7 +44,9 @@ export class StorageProvider {
   public async removeSecret(accountUUID: string) {
     // const secrets = await this.bucket.get();
 
-    await this.bucket.remove(accountUUID);
+    await this.bucket
+      .remove(accountUUID)
+      .then(() => chrome.runtime.sendMessage({ deleteAccount: accountUUID }));
   }
 
   /**
