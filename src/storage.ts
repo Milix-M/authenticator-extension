@@ -19,7 +19,7 @@ export class StorageProvider {
       })
       .then(() => {
         // コンテキストメニューに追加
-        chrome.runtime.sendMessage({ addAccount: account });
+        chrome.runtime.sendMessage({ addAccount: account }).catch((error) => console.log(error));
       });
   }
 
