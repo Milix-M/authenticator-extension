@@ -1,12 +1,43 @@
 import { Account } from "./models/account";
 import { StorageProvider } from "./storage";
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
   chrome.contextMenus.create({
     id: "insertTwoFactorCodeMenu",
     title: "二段階認証コードを挿入",
     contexts: ["editable"],
   });
+
+  // update時にcontextMenuが消えるので再設定
+  if (details.reason === "update") {
+    const storageProvider = new StorageProvider();
+
+    storageProvider.getSecrets().then((values) => {
+      for (const account of values) {
+        chrome.contextMenus.create(
+          {
+            id: account.accountUUID,
+            parentId: "insertTwoFactorCodeMenu",
+            title: account.label,
+            contexts: ["editable"],
+          },
+          function () {
+            // インポート二回されるとこうなるので仕方なくlog出力
+            if (chrome.runtime.lastError) {
+              console.log(
+                `Error creating context menu: ${chrome.runtime.lastError.message}`
+              );
+            }
+          }
+        );
+
+        // コンテキストメニュー設定済にする
+        account.isContextMenuHandled = true;
+        const storageProvider = new StorageProvider();
+        storageProvider.setSecret(account);
+      }
+    });
+  }
 });
 
 chrome.runtime.onMessage.addListener((request) => {
@@ -51,12 +82,29 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 function insertAccountMenuToParent(account: Account) {
-  chrome.contextMenus.create({
-    id: account.accountUUID,
-    parentId: "insertTwoFactorCodeMenu",
-    title: account.label,
-    contexts: ["editable"],
-  });
+  if (!account.isContextMenuHandled) {
+    chrome.contextMenus.create(
+      {
+        id: account.accountUUID,
+        parentId: "insertTwoFactorCodeMenu",
+        title: account.label,
+        contexts: ["editable"],
+      },
+      function () {
+        // インポート二回されるとこうなるので仕方なくlog出力
+        if (chrome.runtime.lastError) {
+          console.log(
+            `Error creating context menu: ${chrome.runtime.lastError.message}`
+          );
+        }
+      }
+    );
+
+    // コンテキストメニュー設定済にする
+    account.isContextMenuHandled = true;
+    const storageProvider = new StorageProvider();
+    storageProvider.setSecret(account);
+  }
 }
 
 function removeAccountMenu(accountUUID: string) {
