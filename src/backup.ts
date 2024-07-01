@@ -8,6 +8,11 @@ import { v4 as uuidv4 } from "uuid";
 export const exportAccounts = () => {
   const storageProvider = new StorageProvider();
   storageProvider.getSecrets().then((values) => {
+    // 移行先でContextMenuを有効にすることを加味し、あえてfalseにしておく
+    for (let i = 0; i < values.length; i++) {
+      values[i].isContextMenuHandled = false;
+    }
+
     const blob = new Blob([JSON.stringify(values)], { type: "text/json" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
