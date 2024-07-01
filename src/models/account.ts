@@ -9,7 +9,8 @@ export class Account {
     public addedAt: number,
     public timeStep: number = 30,
     public counter: number = 0,
-    public issuer?: string
+    public issuer?: string,
+    public isContextMenuHandled?: boolean
   ) {}
 
   /**
