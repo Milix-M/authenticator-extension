@@ -10,7 +10,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   switch (info.menuItemId) {
     case "injectTwoFaCode":
       chrome.windows.create({
-        url: "../index.html",
+        url: "../popup.html",
         type: "popup",
         width: 350,
         height: 500,
