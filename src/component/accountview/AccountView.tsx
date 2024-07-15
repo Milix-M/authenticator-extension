@@ -202,10 +202,12 @@ const AccountView: React.FC<accountProps> = ({
           </p>
           {/* copy icon */}
           <div className="flex space-x-1">
-            <MdContentCopy
-              className="w-4 h-4 ml-1 hover:cursor-pointer"
-              onClick={() => copyToClipboard()}
-            />
+            {!isPopupMode && (
+              <MdContentCopy
+                className="w-4 h-4 ml-1 hover:cursor-pointer"
+                onClick={() => copyToClipboard()}
+              />
+            )}
           </div>
 
           {/* time counter */}
