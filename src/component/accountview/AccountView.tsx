@@ -11,9 +11,14 @@ import Toast from "../toast/Toast";
 interface accountProps {
   account: Account;
   setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
+  isPopupMode?: boolean;
 }
 
-const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
+const AccountView: React.FC<accountProps> = ({
+  account,
+  setAccounts,
+  isPopupMode,
+}) => {
   // コピー完了toast管理state
   const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
   // 残り秒数保持
@@ -165,25 +170,31 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
 
       <div className="group bg-base-100 border p-2 rounded">
         {showCopiedMsg && (
-          <Toast toastText="クリップボードにコピーしました" toastType="alert-info" />
+          <Toast
+            toastText="クリップボードにコピーしました"
+            toastType="alert-info"
+          />
         )}
 
         <div className="flex items-center">
           <p className="text-sm">{account.label}</p>
-          <div className="ml-auto flex items-center">
-            <HiOutlinePencilAlt
-              className="w-4 h-4 mr-1 hidden group-hover:block hover:cursor-pointer"
-              onClick={() => {
-                showAccountEditModal();
-              }}
-            />
-            <FiTrash
-              className="w-4 h-4 hidden group-hover:block hover:cursor-pointer"
-              onClick={() => {
-                showDeleteConfirmModal();
-              }}
-            />
-          </div>
+          {/* コンテキストメニューのポップアップとして表示する場合にEditと削除できなくする */}
+          {!isPopupMode && (
+            <div className="ml-auto flex items-center">
+              <HiOutlinePencilAlt
+                className="w-4 h-4 mr-1 hidden group-hover:block hover:cursor-pointer"
+                onClick={() => {
+                  showAccountEditModal();
+                }}
+              />
+              <FiTrash
+                className="w-4 h-4 hidden group-hover:block hover:cursor-pointer"
+                onClick={() => {
+                  showDeleteConfirmModal();
+                }}
+              />
+            </div>
+          )}
         </div>
         <div className="flex items-baseline">
           <p className="text-4xl mt-1 tracking-wider">
@@ -191,10 +202,12 @@ const AccountView: React.FC<accountProps> = ({ account, setAccounts }) => {
           </p>
           {/* copy icon */}
           <div className="flex space-x-1">
-            <MdContentCopy
-              className="w-4 h-4 ml-1 hover:cursor-pointer"
-              onClick={() => copyToClipboard()}
-            />
+            {!isPopupMode && (
+              <MdContentCopy
+                className="w-4 h-4 ml-1 hover:cursor-pointer"
+                onClick={() => copyToClipboard()}
+              />
+            )}
           </div>
 
           {/* time counter */}
