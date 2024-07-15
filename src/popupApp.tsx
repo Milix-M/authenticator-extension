@@ -6,7 +6,7 @@ import { setThemeToDaisyui } from "./theme";
 
 function App() {
   // ウィンドウへのフォーカス外れたら
-  // window.addEventListener("blur", () => window.close());
+  window.addEventListener("blur", () => window.close());
 
   setThemeToDaisyui(localStorage.getItem("selectedTheme"));
   const storageProvider = new StorageProvider();
@@ -35,13 +35,41 @@ function App() {
           {/* main */}
           <div className="p-2 space-y-2">
             {accounts?.map((account) => (
-              <AccountView account={account} setAccounts={setAccounts} />
+              <div onClick={() => insertTwoFaCode(account)}>
+                <AccountView account={account} setAccounts={setAccounts} />
+              </div>
             ))}
           </div>
         </div>
       </div>
     </>
   );
+}
+
+function insertTwoFaCode(account: Account) {
+  const params = new URLSearchParams(window.location.search);
+  // backgroundでアクティブだったinput要素を特定するために付与したクラス名をURLクエリから取得
+  const uuid = params.get("uuid");
+  // 対象のtabを特定するidをURLクエリから取得
+  const tabid = params.get("tabid");
+
+  if (tabid !== undefined) {
+    chrome.scripting
+      .executeScript({
+        target: { tabId: Number(tabid) },
+
+        // 先程取得したクラス名でinput要素を特定して二段階認証コードを挿入する
+        func: (uuid, twoFaCode) => {
+          const input = document.getElementsByClassName(
+            uuid as string
+          )[0] as HTMLInputElement;
+          input.value = twoFaCode as string;
+        },
+        args: [uuid, account.genTwoFaCode()],
+      })
+      // 成功したらウィンドウ閉じる
+      .then(() => window.close());
+  }
 }
 
 export default App;
