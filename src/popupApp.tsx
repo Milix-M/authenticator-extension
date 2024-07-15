@@ -35,8 +35,15 @@ function App() {
           {/* main */}
           <div className="p-2 space-y-2">
             {accounts?.map((account) => (
-              <div onClick={() => insertTwoFaCode(account)}>
-                <AccountView account={account} setAccounts={setAccounts} />
+              <div
+                onClick={() => insertTwoFaCode(account)}
+                className="hover:cursor-pointer"
+              >
+                <AccountView
+                  account={account}
+                  setAccounts={setAccounts}
+                  isPopupMode={true}
+                />
               </div>
             ))}
           </div>
@@ -68,7 +75,12 @@ function insertTwoFaCode(account: Account) {
         args: [uuid, account.genTwoFaCode()],
       })
       // 成功したらウィンドウ閉じる
-      .then(() => window.close());
+      .then(() => {
+        window.close();
+      })
+      .catch((error) => {
+        alert(error);
+      });
   }
 }
 
