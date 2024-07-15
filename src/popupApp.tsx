@@ -76,7 +76,15 @@ function insertTwoFaCode(account: Account) {
       })
       // 成功したらウィンドウ閉じる
       .then(() => {
-        window.close();
+        // アカウントタイプがHOTPだったらちゃんと保存してあげる
+        if (account.type === "hotp") {
+          const storageProvider = new StorageProvider();
+          storageProvider.setSecret(account).then(() => {
+            window.close();
+          });
+        } else {
+          window.close();
+        }
       })
       .catch((error) => {
         alert(error);
