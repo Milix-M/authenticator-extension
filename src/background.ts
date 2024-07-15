@@ -13,7 +13,12 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   if (tab !== undefined && tab.id !== undefined) {
     // chrome内蔵のページで動作させるとエラー発生する
-    if (tab.url?.startsWith("chrome://")) return;
+    if (
+      tab.url?.startsWith("chrome://") ||
+      tab.url?.indexOf("chromewebstore.google.com") != -1
+    ) {
+      return;
+    }
 
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
@@ -37,7 +42,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
           height: 520,
           focused: true,
         });
-        console.log(tab);
     }
   }
 });
