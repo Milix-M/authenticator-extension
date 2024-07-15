@@ -12,8 +12,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       chrome.windows.create({
         url: "../popup.html",
         type: "popup",
-        width: 350,
-        height: 500,
+        width: 340,
+        height: 520,
         focused: true,
       });
       console.log(tab);
