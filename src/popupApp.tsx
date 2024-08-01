@@ -24,7 +24,7 @@ function App() {
 
   return (
     <>
-      <div id="app" className="w-full flex justify-center">
+      <div id="app" className="w-full h-screen flex justify-center">
         <div className="w-full bg-base-200 flex flex-col">
           <div className="py-3 px-4 w-full flex justify-center items-center bg-base-100 border-b">
             <p className="text-sm font-bold">
