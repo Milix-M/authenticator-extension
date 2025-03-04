@@ -11,7 +11,14 @@
     "128": "icons/authenticator_128.png"
   },
   "background": {
-    "service_worker": "./src/background.ts",
+    "scripts": [
+      "./src/background.ts"
+    ],
     "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "addons@example.com"
+    }
   }
 }
