@@ -13,6 +13,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         popup: resolve(__dirname, "popup.html"),
+        import: resolve(__dirname, "importpopup.html")
       },
     },
   },
