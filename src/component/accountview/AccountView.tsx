@@ -228,7 +228,8 @@ const AccountView: React.FC<accountProps> = ({
                   isHotpCooldown ? "text-base-300" : ""
                 }`}
                 onClick={async () => {
-                  if (!isHotpCooldown) {
+                  // クールダウン中、ポップアップモードのときには押下しても処理が実行されないようにする
+                  if (!isHotpCooldown && !isPopupMode) {
                     setHotpCode(account.genTwoFaCode());
                     storageProvider.setSecret(account).then(async () => {
                       setAccounts(await storageProvider.getSecrets());
