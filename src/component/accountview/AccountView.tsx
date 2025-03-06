@@ -168,7 +168,7 @@ const AccountView: React.FC<accountProps> = ({
         </div>
       </dialog>
 
-      <div className="group bg-base-100 border p-2 rounded">
+      <div className="group bg-base-100 border p-2 rounded shadow shadow-sm">
         {showCopiedMsg && (
           <Toast
             toastText="クリップボードにコピーしました"
