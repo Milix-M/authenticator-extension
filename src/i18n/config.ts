@@ -19,8 +19,8 @@ i18n
     supportedLngs: Object.keys(supportedLngs),
 
     // デフォルトは`escapeValue: true`
-    // 18next が翻訳メッセージ内のコードをエスケープし、XSS 攻撃から保護するためのもの
-    // React がこのエスケープを行ってくれるので、今回はこれをオフにする
+    // 18next が翻訳メッセージ内のコードをエスケープし、XSS 攻撃から保護するための設定
+    // React がこのエスケープを行ってくれるようなのでオフにする
     interpolation: {
       escapeValue: false,
     },
