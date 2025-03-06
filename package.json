@@ -15,11 +15,13 @@
     "@types/pngjs": "^6.0.5",
     "buffer": "^6.0.3",
     "crypto-js": "^4.2.0",
+    "i18next": "^24.2.2",
     "jsqr": "^1.4.0",
     "otpauth-uri-parser": "^1.0.2",
     "pngjs": "^7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^15.4.1",
     "react-icons": "^5.2.1",
     "use-interval": "^1.4.0",
     "uuid": "^9.0.1"
