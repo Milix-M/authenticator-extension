@@ -1,0 +1,26 @@
+{
+    "settings_modal": {
+        "title": "Authenticator Settings",
+        "theme": "Themes",
+        "account_transfer": "Account Transfer",
+        "import": "Import",
+        "export": "Export"
+    },
+    "add_account_modal": {
+        "title": "Add Account",
+        "name": "Account Name",
+        "key": "Key",
+        "type": "Type"
+    },
+    "notify": {
+        "failed_add_acount": "Unable to add an account",
+        "success_add_account": "Account has been added"
+    },
+    "import_account": {
+        "select_importfile": "Please select a backup file",
+        "choice_file": "Select a file..."
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "add": "Add"
+}
