@@ -29,6 +29,7 @@
     "common": {
         "cancel": "Cancel",
         "save": "Save",
-        "add": "Add"
+        "add": "Add",
+        "do": "Execution"
     }
 }
