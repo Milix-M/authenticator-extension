@@ -12,6 +12,10 @@
         "key": "キー",
         "type": "タイプ"
     },
+    "account_view": {
+        "title": "アカウントの削除",
+        "warning_msg": "アカウントを削除すると復元することはできません。よろしいですか？"
+    },
     "notify": {
         "failed_add_acount": "アカウントを追加出来ませんでした",
         "success_add_account": "アカウントを追加しました",

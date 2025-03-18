@@ -12,6 +12,10 @@
         "key": "Key",
         "type": "Type"
     },
+    "account_view": {
+        "title": "Account Deletion",
+        "warning_msg": "Once an account is deleted, it cannot be restored. Are you sure?"
+    },
     "notify": {
         "failed_add_acount": "Unable to add an account",
         "success_add_account": "Account has been added",
