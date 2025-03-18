@@ -12,9 +12,13 @@
         "key": "Key",
         "type": "Type"
     },
-    "account_view": {
+    "account_delete_modal": {
         "title": "Account Deletion",
         "warning_msg": "Once an account is deleted, it cannot be restored. Are you sure?"
+    },
+    "account_edit_modal": {
+        "title": "Edit Account",
+        "account_name": "account name"
     },
     "notify": {
         "failed_add_acount": "Unable to add an account",
@@ -30,6 +34,7 @@
         "cancel": "Cancel",
         "save": "Save",
         "add": "Add",
-        "do": "Execution"
+        "do": "Execution",
+        "req": "Required"
     }
 }
