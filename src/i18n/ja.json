@@ -20,7 +20,9 @@
         "select_importfile": "バックアップファイルを選択してください",
         "choice_file": "ファイルを選択..."
     },
-    "cancel": "キャンセル",
-    "save": "保存",
-    "add": "追加"
+    "common": {
+        "cancel": "キャンセル",
+        "save": "保存",
+        "add": "追加"
+    }
 }
