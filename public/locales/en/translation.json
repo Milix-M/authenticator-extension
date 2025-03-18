@@ -6,7 +6,7 @@
         "import": "Import",
         "export": "Export"
     },
-    "add_account_modal": {
+    "account_add_modal": {
         "title": "Add Account",
         "name": "Account Name",
         "key": "Key",
