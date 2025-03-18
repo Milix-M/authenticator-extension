@@ -14,7 +14,9 @@
     },
     "notify": {
         "failed_add_acount": "Unable to add an account",
-        "success_add_account": "Account has been added"
+        "success_add_account": "Account has been added",
+        "import_success": "Successfully imported",
+        "import_failed": "Import failed"
     },
     "import_account": {
         "select_importfile": "Please select a backup file",
