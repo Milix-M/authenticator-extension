@@ -31,6 +31,9 @@
         "select_importfile": "バックアップファイルを選択してください",
         "choice_file": "ファイルを選択..."
     },
+    "insert_popup": {
+        "msg": "クリックして二段階認証コードを挿入..."
+    },
     "common": {
         "cancel": "キャンセル",
         "save": "保存",

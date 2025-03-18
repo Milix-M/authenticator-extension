@@ -31,6 +31,9 @@
         "select_importfile": "Please select a backup file",
         "choice_file": "Select a file..."
     },
+    "insert_popup": {
+        "msg": "Click to insert two-factor verification code..."
+    },
     "common": {
         "cancel": "Cancel",
         "save": "Save",
