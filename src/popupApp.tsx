@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import { StorageProvider } from "./storage";
 import { Account } from "./models/account";
 import { setThemeToDaisyui } from "./theme";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  // i18n
+  const { t } = useTranslation();
+
   // ウィンドウへのフォーカス外れたら
   window.addEventListener("blur", () => window.close());
 
@@ -28,7 +32,7 @@ function App() {
         <div className="w-full bg-base-200 flex flex-col">
           <div className="py-3 px-4 w-full flex justify-center items-center bg-base-100 border-b">
             <p className="text-sm font-bold">
-              クリックして二段階認証コードを挿入...
+              {t("insert_popup.msg")}
             </p>
           </div>
 
