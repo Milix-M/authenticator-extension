@@ -135,7 +135,7 @@ const AccountView: React.FC<accountProps> = ({
           <div className="mt-1 flex justify-center">
             <label className="form-control w-full max-w-xs ">
               <div className="label py-1">
-                <span className="label-text">{t("account_edit_modal.name")}</span>
+                <span className="label-text">{t("account_edit_modal.account_name")}</span>
                 <span className="label-text-alt">{t("common.req")}</span>
               </div>
               <input
