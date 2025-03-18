@@ -24,7 +24,8 @@
         "failed_add_acount": "アカウントを追加出来ませんでした",
         "success_add_account": "アカウントを追加しました",
         "import_success": "インポートに成功しました",
-        "import_failed": "インポートに失敗しました"
+        "import_failed": "インポートに失敗しました",
+        "copy_clipboard": "クリップボードにコピーしました"
     },
     "import_account": {
         "select_importfile": "バックアップファイルを選択してください",
