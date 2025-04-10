@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { useTranslation } from "react-i18next";
 import { supportedTheme } from "../../supportedTheme";
 import { setThemeToDaisyui } from "../../theme";
 import { exportAccounts } from "../../backup";
