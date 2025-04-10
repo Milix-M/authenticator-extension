@@ -6,12 +6,16 @@ import { readQRtoAccount } from "../../qrcodereader";
 import { StorageProvider } from "../../storage";
 import { Account } from "../../models/account";
 import Toast from "../toast/Toast";
+import { useTranslation } from "react-i18next";
 
 interface headerProps {
   setAccounts: React.Dispatch<React.SetStateAction<Account[] | undefined>>;
 }
 
 const Header: React.FC<headerProps> = ({ setAccounts }) => {
+  // i18n
+  const { t } = useTranslation();
+
   // メッセージ表示toast管理state
   const [showNotifyToast, setShowNotifyToast] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<string>("");
@@ -65,9 +69,9 @@ const Header: React.FC<headerProps> = ({ setAccounts }) => {
         await storageProvider.setSecret(newAccount);
         const values = await storageProvider.getSecrets();
         setAccounts(values);
-        notifyToast("アカウントを追加しました", "info");
+        notifyToast(t("notify.success_add_account"), "info");
       } else {
-        notifyToast("アカウントを追加できませんでした", "warning");
+        notifyToast(t("notify.failed_add_acount"), "warning");
       }
     } catch (error) {
       console.error("Failed to read QR code and set account:", error);

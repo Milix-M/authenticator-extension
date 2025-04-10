@@ -1,0 +1,44 @@
+{
+    "settings_modal": {
+        "title": "Authenticator Settings",
+        "theme": "Themes",
+        "account_transfer": "Account Transfer",
+        "import": "Import",
+        "export": "Export"
+    },
+    "account_add_modal": {
+        "title": "Add Account",
+        "name": "Account Name",
+        "key": "Key",
+        "type": "Type"
+    },
+    "account_delete_modal": {
+        "title": "Account Deletion",
+        "warning_msg": "Once an account is deleted, it cannot be restored. Are you sure?"
+    },
+    "account_edit_modal": {
+        "title": "Edit Account",
+        "account_name": "account name"
+    },
+    "notify": {
+        "failed_add_acount": "Unable to add an account",
+        "success_add_account": "Account has been added",
+        "import_success": "Successfully imported",
+        "import_failed": "Import failed",
+        "copy_clipboard": "Copied to clipboard."
+    },
+    "import_account": {
+        "select_importfile": "Please select a backup file",
+        "choice_file": "Select a file..."
+    },
+    "insert_popup": {
+        "msg": "Click to insert two-factor verification code..."
+    },
+    "common": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "add": "Add",
+        "do": "Execution",
+        "req": "Required"
+    }
+}

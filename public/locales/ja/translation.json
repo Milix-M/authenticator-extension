@@ -1,0 +1,44 @@
+{
+    "settings_modal": {
+        "title": "Authenticatorの設定",
+        "theme": "テーマ",
+        "account_transfer": "アカウント引き継ぎ",
+        "import": "インポート",
+        "export": "エクスポート"
+    },
+    "account_add_modal": {
+        "title": "アカウントの追加",
+        "name": "アカウント名",
+        "key": "キー",
+        "type": "タイプ"
+    },
+    "account_delete_modal": {
+        "title": "アカウントの削除",
+        "warning_msg": "アカウントを削除すると復元することはできません。よろしいですか？"
+    },
+    "account_edit_modal": {
+        "title": "アカウントの編集",
+        "account_name": "アカウント名"
+    },
+    "notify": {
+        "failed_add_acount": "アカウントを追加出来ませんでした",
+        "success_add_account": "アカウントを追加しました",
+        "import_success": "インポートに成功しました",
+        "import_failed": "インポートに失敗しました",
+        "copy_clipboard": "クリップボードにコピーしました"
+    },
+    "import_account": {
+        "select_importfile": "バックアップファイルを選択してください",
+        "choice_file": "ファイルを選択..."
+    },
+    "insert_popup": {
+        "msg": "クリックして二段階認証コードを挿入..."
+    },
+    "common": {
+        "cancel": "キャンセル",
+        "save": "保存",
+        "add": "追加",
+        "do": "実行",
+        "req": "必須"
+    }
+}
