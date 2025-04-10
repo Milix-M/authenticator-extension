@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { crx } from "@crxjs/vite-plugin";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import manifest from "./manifest.json";
-import { resolve } from "path";
+import path, { resolve } from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,5 +16,7 @@ export default defineConfig({
         import: resolve(__dirname, "importpopup.html")
       },
     },
+    outDir: path.join(__dirname, 'dist', process.env.BROWSER!),
+
   },
 });
