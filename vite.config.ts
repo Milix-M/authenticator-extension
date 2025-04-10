@@ -2,12 +2,15 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { crx } from "@crxjs/vite-plugin";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import manifest from "./manifest.json";
+import manifestChrome from "./manifest.json";
+import manifestFirefox from "./manifest_firefox.json";
 import path, { resolve } from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), crx({ manifest }), nodePolyfills()],
+  plugins: process.env.BROWSER === "chrome"
+    ? [react(), crx({ manifest: manifestChrome }), nodePolyfills()]
+    : [react(), crx({ manifest: manifestFirefox }), nodePolyfills()],
   build: {
     rollupOptions: {
       input: {
