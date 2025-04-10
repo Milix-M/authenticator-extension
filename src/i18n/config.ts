@@ -11,7 +11,9 @@ export const supportedLngs = {
 
 i18n
   .use(Backend) // 翻訳ファイルを非同期に読み込むようにする
-  .use(LanguageDetector) // ユーザーの言語設定を検知するようにする
+  .use(new LanguageDetector(null, {
+    order: ['querystring', 'cookie', 'navigator', 'localStorage', 'sessionStorage', 'htmlTag', 'path', 'subdomain'],
+  })) // ユーザーの言語設定を検知するようにする
   .use(initReactI18next) // i18next インスタンスを初期化
   .init({
     fallbackLng: "ja", // フォールバック言語。指定された言語ファイルがない場合などにこの言語が使用される
