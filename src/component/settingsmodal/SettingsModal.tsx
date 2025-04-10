@@ -76,6 +76,9 @@ const SettingsModal: React.FC<settingsModalProps> = ({
                       height: 520,
                       focused: true,
                     });
+
+                    // Chromeでは拡張機能のポップアップが自動で消えないためFirefoxと動作を合わせるために拡張機能ポップアップを消す
+                    window.close();
                   }}
                 >
                   {t("settings_modal.import")}
