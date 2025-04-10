@@ -1,11 +1,9 @@
 import { useState } from "react";
-
+import { useTranslation } from "react-i18next";
 import { supportedTheme } from "../../supportedTheme";
 import { setThemeToDaisyui } from "../../theme";
-import { exportAccounts, importAccounts } from "../../backup";
+import { exportAccounts } from "../../backup";
 import { Account } from "../../models/account";
-import { StorageProvider } from "../../storage";
-import { useTranslation } from "react-i18next";
 
 interface settingsModalProps {
   modalRef: React.RefObject<HTMLDialogElement>;
@@ -14,7 +12,6 @@ interface settingsModalProps {
 
 const SettingsModal: React.FC<settingsModalProps> = ({
   modalRef,
-  setAccounts,
 }) => {
   // i18n
   const { t } = useTranslation();
@@ -27,26 +24,6 @@ const SettingsModal: React.FC<settingsModalProps> = ({
   const saveTheme = (theme: string | null) => {
     if (theme !== null) {
       localStorage.setItem("selectedTheme", theme);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget?.files && e.currentTarget.files[0]) {
-      const targetFile = e.currentTarget.files[0];
-      importAccounts(targetFile)
-        .then(async () => {
-          setImportErrorNotify(false);
-          setImportSuccessNotify(true);
-
-          const storageProvider = new StorageProvider();
-          await storageProvider.getSecrets().then((values) => {
-            setAccounts(values);
-          });
-        })
-        .catch(() => {
-          setImportSuccessNotify(false);
-          setImportErrorNotify(true);
-        });
     }
   };
 
@@ -92,13 +69,16 @@ const SettingsModal: React.FC<settingsModalProps> = ({
                 <button
                   className="btn btn-sm btn-primary w-full"
                   onClick={() => {
-                    const filePickInput = document.createElement("input");
-                    filePickInput.type = "file";
-                    filePickInput.accept = ".json";
-                    filePickInput.addEventListener("change", (e) =>
-                      handleFileChange(e as any)
-                    );
-                    filePickInput.click();
+                    chrome.windows.create({
+                      url: `../importpopup.html`,
+                      type: "popup",
+                      width: 340,
+                      height: 520,
+                      focused: true,
+                    });
+
+                    // Chromeでは拡張機能のポップアップが自動で消えないためFirefoxと動作を合わせるために拡張機能ポップアップを消す
+                    window.close();
                   }}
                 >
                   {t("settings_modal.import")}
