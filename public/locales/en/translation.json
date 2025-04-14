@@ -39,6 +39,7 @@
         "save": "Save",
         "add": "Add",
         "do": "Execution",
-        "req": "Required"
+        "req": "Required",
+        "window_close": "Close Window"
     }
 }

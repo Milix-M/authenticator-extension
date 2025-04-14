@@ -27,8 +27,8 @@ function ImportPopup() {
       const targetFile = e.currentTarget.files[0];
       importAccounts(targetFile)
         .then(async () => {
-          setImportMsg("アカウントのインポートに成功しました")
-          setCloseBtnText("ウィンドウを閉じる")
+          setImportMsg(t("notify.import_success"))
+          setCloseBtnText(t("common.window_close"));
           setImportBtnFlag(false)
         })
         .catch(() => {
@@ -54,7 +54,7 @@ function ImportPopup() {
                 filePickInput.click();
               }}
             >
-              ファイルを選択...
+              {t("import_account.choice_file")}
             </button>
           )}
           <button
