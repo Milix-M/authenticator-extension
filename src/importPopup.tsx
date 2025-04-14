@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import { importAccounts } from "./backup";
 import { setThemeToDaisyui } from "./theme";
+import { useTranslation } from "react-i18next";
+import "./i18n/config.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -13,8 +15,11 @@ function ImportPopup() {
   // テーマを設定
   setThemeToDaisyui(localStorage.getItem("selectedTheme"));
 
-  const [importMsg, setImportMsg] = useState<string>("バックアップファイルを選択してください");
-  const [closeBtnText, setCloseBtnText] = useState<string>("キャンセル");
+  // i18n
+  const { t } = useTranslation();
+
+  const [importMsg, setImportMsg] = useState<string>(t("import_account.select_importfile"));
+  const [closeBtnText, setCloseBtnText] = useState<string>(t("common.cancel"));
   const [importBtnFlag, setImportBtnFlag] = useState<boolean>(true);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,8 +27,8 @@ function ImportPopup() {
       const targetFile = e.currentTarget.files[0];
       importAccounts(targetFile)
         .then(async () => {
-          setImportMsg("アカウントのインポートに成功しました")
-          setCloseBtnText("ウィンドウを閉じる")
+          setImportMsg(t("notify.import_success"))
+          setCloseBtnText(t("common.window_close"));
           setImportBtnFlag(false)
         })
         .catch(() => {
@@ -49,7 +54,7 @@ function ImportPopup() {
                 filePickInput.click();
               }}
             >
-              ファイルを選択...
+              {t("import_account.choice_file")}
             </button>
           )}
           <button
