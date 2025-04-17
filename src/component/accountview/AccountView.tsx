@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import useInterval from "use-interval";
 import { TbReload } from "react-icons/tb";
 import Toast from "../toast/Toast";
+import { useTranslation } from "react-i18next";
 
 interface accountProps {
   account: Account;
@@ -19,6 +20,9 @@ const AccountView: React.FC<accountProps> = ({
   setAccounts,
   isPopupMode,
 }) => {
+  // i18n
+  const { t } = useTranslation();
+
   // コピー完了toast管理state
   const [showCopiedMsg, setShowCopiedMsg] = useState<boolean>(false);
   // 残り秒数保持
@@ -97,15 +101,15 @@ const AccountView: React.FC<accountProps> = ({
         className="modal modal-bottom sm:modal-middle"
       >
         <div className="modal-box">
-          <h3 className="font-bold text-lg">アカウントを削除</h3>
+          <h3 className="font-bold text-lg">{t("account_delete_modal.title")}</h3>
           <p className="break-words text-sm mt-2">
-            アカウントを削除すると復元することはできません。よろしいですか？
+            {t("account_delete_modal.warning_msg")}
           </p>
 
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn">キャンセル</button>
+              <button className="btn">{t("common.cancel")}</button>
               <button
                 className="btn btn-primary ml-2"
                 onClick={async () => {
@@ -116,7 +120,7 @@ const AccountView: React.FC<accountProps> = ({
                     );
                 }}
               >
-                実行
+                {t("common.do")}
               </button>
             </form>
           </div>
@@ -125,14 +129,14 @@ const AccountView: React.FC<accountProps> = ({
 
       <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">アカウント編集</h3>
-          <p className="break-words text-sm mt-2"></p>
+          <h3 className="font-bold text-lg">{t("account_edit_modal.title")}</h3>
+          <p className="break-words text-sm mt-2"></p> {/* 謎のPどうにかする */}
 
           <div className="mt-1 flex justify-center">
             <label className="form-control w-full max-w-xs ">
               <div className="label py-1">
-                <span className="label-text">アカウント名</span>
-                <span className="label-text-alt">必須</span>
+                <span className="label-text">{t("account_edit_modal.account_name")}</span>
+                <span className="label-text-alt">{t("common.req")}</span>
               </div>
               <input
                 type="text"
@@ -149,7 +153,7 @@ const AccountView: React.FC<accountProps> = ({
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn">キャンセル</button>
+              <button className="btn">{t("common.cancel")}</button>
               <button
                 className="btn btn-primary ml-2"
                 onClick={async () => {
@@ -161,17 +165,17 @@ const AccountView: React.FC<accountProps> = ({
                   }
                 }}
               >
-                保存
+                {t("common.save")}
               </button>
             </form>
           </div>
         </div>
       </dialog>
 
-      <div className="group bg-base-100 border p-2 rounded">
+      <div className="group bg-base-100 border p-2 rounded shadow shadow-sm">
         {showCopiedMsg && (
           <Toast
-            toastText="クリップボードにコピーしました"
+            toastText={t("notify.copy_clipboard")}
             toastType="alert-info"
           />
         )}
@@ -228,7 +232,8 @@ const AccountView: React.FC<accountProps> = ({
                   isHotpCooldown ? "text-base-300" : ""
                 }`}
                 onClick={async () => {
-                  if (!isHotpCooldown) {
+                  // クールダウン中、ポップアップモードのときには押下しても処理が実行されないようにする
+                  if (!isHotpCooldown && !isPopupMode) {
                     setHotpCode(account.genTwoFaCode());
                     storageProvider.setSecret(account).then(async () => {
                       setAccounts(await storageProvider.getSecrets());

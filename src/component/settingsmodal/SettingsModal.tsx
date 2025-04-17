@@ -1,10 +1,9 @@
 import { useState } from "react";
-
+import { useTranslation } from "react-i18next";
 import { supportedTheme } from "../../supportedTheme";
 import { setThemeToDaisyui } from "../../theme";
-import { exportAccounts, importAccounts } from "../../backup";
+import { exportAccounts } from "../../backup";
 import { Account } from "../../models/account";
-import { StorageProvider } from "../../storage";
 
 interface settingsModalProps {
   modalRef: React.RefObject<HTMLDialogElement>;
@@ -13,8 +12,10 @@ interface settingsModalProps {
 
 const SettingsModal: React.FC<settingsModalProps> = ({
   modalRef,
-  setAccounts,
 }) => {
+  // i18n
+  const { t } = useTranslation();
+
   const savedTheme = localStorage.getItem("selectedTheme");
   const [theme, setTheme] = useState(localStorage.getItem("selectedTheme"));
   const [importSuccessNotify, setImportSuccessNotify] = useState(false);
@@ -26,36 +27,16 @@ const SettingsModal: React.FC<settingsModalProps> = ({
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget?.files && e.currentTarget.files[0]) {
-      const targetFile = e.currentTarget.files[0];
-      importAccounts(targetFile)
-        .then(async () => {
-          setImportErrorNotify(false);
-          setImportSuccessNotify(true);
-
-          const storageProvider = new StorageProvider();
-          await storageProvider.getSecrets().then((values) => {
-            setAccounts(values);
-          });
-        })
-        .catch(() => {
-          setImportSuccessNotify(false);
-          setImportErrorNotify(true);
-        });
-    }
-  };
-
   return (
     <>
       <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Authenticatorの設定</h3>
+          <h3 className="font-bold text-lg">{t("settings_modal.title")}</h3>
 
           <div className="mt-1 flex justify-center">
             <label className="form-control w-full max-w-xs">
               <div className="label">
-                <span className="label-text">テーマ</span>
+                <span className="label-text">{t("settings_modal.theme")}</span>
               </div>
               <select
                 className="select select-bordered select-sm"
@@ -63,9 +44,9 @@ const SettingsModal: React.FC<settingsModalProps> = ({
                   setTheme(e.target.value);
                   setThemeToDaisyui(e.target.value);
                 }}
-                value={theme !== null ? theme : "システム設定"}
+                value={theme !== null ? theme : "system"}
               >
-                <option value={"syncSystem"}>システム設定</option>
+                <option value={"syncSystem"}>system</option>
                 {supportedTheme.map((theme) => (
                   <option value={theme}>{theme}</option>
                 ))}
@@ -76,38 +57,41 @@ const SettingsModal: React.FC<settingsModalProps> = ({
           <div className="mt-1 flex justify-center">
             <div className="w-full max-w-xs">
               <div className="label">
-                <span className="label-text">アカウント引き継ぎ</span>
+                <span className="label-text">{t("settings_modal.account_transfer")}</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   className="btn btn-sm btn-primary w-full"
                   onClick={() => exportAccounts()}
                 >
-                  エクスポート
+                  {t("settings_modal.export")}
                 </button>
                 <button
                   className="btn btn-sm btn-primary w-full"
                   onClick={() => {
-                    const filePickInput = document.createElement("input");
-                    filePickInput.type = "file";
-                    filePickInput.accept = ".json";
-                    filePickInput.addEventListener("change", (e) =>
-                      handleFileChange(e as any)
-                    );
-                    filePickInput.click();
+                    chrome.windows.create({
+                      url: `../importpopup.html`,
+                      type: "popup",
+                      width: 340,
+                      height: 520,
+                      focused: true,
+                    });
+
+                    // Chromeでは拡張機能のポップアップが自動で消えないためFirefoxと動作を合わせるために拡張機能ポップアップを消す
+                    window.close();
                   }}
                 >
-                  インポート
+                  {t("settings_modal.import")}
                 </button>
               </div>
               {importErrorNotify && (
                 <p className="mt-1 text-center font-bold text-error">
-                  インポートに失敗しました
+                  {t("import_failed")}
                 </p>
               )}
               {importSuccessNotify && (
                 <p className="mt-1 text-center font-bold text-success">
-                  インポートに成功しました
+                  {t("import_success")}
                 </p>
               )}
             </div>
@@ -125,7 +109,7 @@ const SettingsModal: React.FC<settingsModalProps> = ({
                   setImportSuccessNotify(false);
                 }}
               >
-                キャンセル
+                {t("common.cancel")}
               </button>
               <button
                 className="btn btn-primary ml-2"
@@ -136,7 +120,7 @@ const SettingsModal: React.FC<settingsModalProps> = ({
                   setImportSuccessNotify(false);
                 }}
               >
-                保存
+                {t("common.save")}
               </button>
             </form>
           </div>

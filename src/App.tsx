@@ -5,8 +5,12 @@ import { StorageProvider } from "./storage";
 import { Account } from "./models/account";
 import { v4 as uuidv4 } from "uuid";
 import { setThemeToDaisyui } from "./theme";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  // i18n
+  const { t } = useTranslation();
+
   const [accountName, setAccountName] = useState("");
   const [secret, setSecret] = useState("");
   const [otpType, setOtpType] = useState("totp");
@@ -66,13 +70,13 @@ function App() {
           className="modal modal-bottom sm:modal-middle"
         >
           <div className="modal-box">
-            <h3 className="font-bold text-lg">アカウントを追加</h3>
+            <h3 className="font-bold text-lg">{t("account_add_modal.title")}</h3>
 
             <div className="mt-1 flex justify-center">
               <label className="form-control w-full max-w-xs ">
                 <div className="label py-1">
-                  <span className="label-text">アカウント名</span>
-                  <span className="label-text-alt">必須</span>
+                  <span className="label-text">{t("account_add_modal.name")}</span>
+                  <span className="label-text-alt">{t("common.req")}</span>
                 </div>
                 <input
                   id="account"
@@ -88,8 +92,8 @@ function App() {
             <div className="mt-1 flex justify-center">
               <label className="form-control w-full max-w-xs ">
                 <div className="label py-1">
-                  <span className="label-text">キー</span>
-                  <span className="label-text-alt">必須</span>
+                  <span className="label-text">{t("account_add_modal.key")}</span>
+                  <span className="label-text-alt">{t("common.req")}</span>
                 </div>
                 <input
                   type="text"
@@ -104,8 +108,8 @@ function App() {
             <div className="mt-1 flex justify-center">
               <label className="form-control w-full max-w-xs">
                 <div className="label">
-                  <span className="label-text">タイプ</span>
-                  <span className="label-text-alt">必須</span>
+                  <span className="label-text">{t("account_add_modal.type")}</span>
+                  <span className="label-text-alt">{t("common.req")}</span>
                 </div>
                 <select
                   className="select select-bordered select-sm"
@@ -127,7 +131,7 @@ function App() {
                     resetInputForm();
                   }}
                 >
-                  キャンセル
+                  {t("common.cancel")}
                 </button>
                 <button
                   className="btn btn-primary ml-2"
@@ -154,7 +158,7 @@ function App() {
                   }}
                   disabled={isBtnDisabled}
                 >
-                  追加
+                  {t("common.add")}
                 </button>
               </form>
             </div>
